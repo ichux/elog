@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  database:
+    image: postgres:12.0-alpine
+    restart: always
+    container_name: elog_psql
+    environment:
+      POSTGRES_DB: 'elog'
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'password'
+    ports:
+      - '56782:5432'
+    volumes:
+      - $HOME/elog_psql:/var/lib/postgresql/data
+
+  serve:
+    build: ./elog
+    restart: always
+    command: flask run
+    container_name: elog_flap
+    volumes:
+      - .:/code
+    environment:
+      FLASK_ENV: development
+      FLASK_SKIP_DOTENV: 0
+      FLASK_APP: wsgi.py
+      FLASK_DEBUG: 1
+      FLASK_RUN_HOST: 0.0.0.0
+
+      SITE_NAME: elog
+      SECRET_KEY: a9f376ad59510f88f9be5ec886b0e^3qTnVnRh[g.0d522fd2c4f2d68ba7Qx839449a044bf647
+      ELAP_STATUS: elog.config.DevelopmentConfig
+
+      ELOG_DB: elog
+      ELOG_USER: user
+      ELOG_PASSWORD: password
+      ELOG_HOST: 'host.docker.internal'
+      ELOG_PORT: 56782
+
+    ports:
+      - '9020:5000'
+    depends_on:
+      - database

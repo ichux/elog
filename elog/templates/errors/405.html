@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>405</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}"/>
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+
+  </head>
+  <body class="error">
+    <div class="container">
+      <div class="col-lg-8 col-lg-offset-2 text-center">
+        <div class="logo">
+          <h1>405</h1>
+        </div>
+        <p class="lead text-muted">Oops, error:405! We have logged your details</p>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div>
+        <br>
+        <div class="col-lg-6 col-lg-offset-3">
+          <div class="btn-group btn-group-justified">
+            <a href="#" class="btn btn-info">Return to</a>
+            <a href="javascript: history.go(-1);" class="btn btn-warning">Previous Page</a>
+          </div>
+        </div>
+      </div><!-- /.col-lg-8 col-offset-2 -->
+    </div>
+  </body>
+</html>
