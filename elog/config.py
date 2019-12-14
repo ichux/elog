@@ -4,7 +4,6 @@ POSTGRES_DB = os.getenv('ELOG_DB')
 POSTGRES_USER = os.getenv('ELOG_USER')
 POSTGRES_PASSWORD = os.getenv('ELOG_PASSWORD')
 POSTGRES_HOST = os.getenv('ELOG_HOST')
-POSTGRES_PORT = os.getenv('ELOG_PORT')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -18,8 +17,7 @@ class Config(object):
 
     # SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_ECHO = False
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:" \
-                              f"{POSTGRES_PORT}/{POSTGRES_DB}"
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
@@ -29,16 +27,14 @@ class DevelopmentConfig(Config):
 
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///modelate.db'
     SQLALCHEMY_ECHO = False
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:" \
-                              f"{POSTGRES_PORT}/{POSTGRES_DB}"
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
 
 class LiveConfig(Config):
     DEBUG = False
     TESTING = False
 
     SQLALCHEMY_ECHO = False
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:" \
-                              f"{POSTGRES_PORT}/{POSTGRES_DB}"
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
 
 class TestConfig(Config):
     DEBUG = False
