@@ -36,6 +36,7 @@ help:
 	@echo "  usid           get the id of the specified user from the DB"
 	@echo "  access         grants access to a user"
 	@echo "  details        displays the details of a user"
+	@echo "  config         displays the docker configuration"
 
 
 clean:
@@ -52,7 +53,7 @@ bde: clean
 	docker-compose up --build -d; docker-compose logs; docker-compose ps
 
 up:
-	docker-compose up -d
+	docker-compose up --build -d
 
 stop:
 	docker-compose stop
@@ -74,6 +75,7 @@ tail:
 	docker logs elog_flap --timestamps --follow
 
 dpa:
+	docker-compose ps
 	docker ps -a --format $(FORMAT)
 
 ipdoc:
@@ -139,3 +141,6 @@ access:
 details:
 	# make details u=ichux
 	docker-compose run --rm serve flask details ${u}
+
+config:
+	docker-compose config
