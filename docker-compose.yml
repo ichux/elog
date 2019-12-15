@@ -7,8 +7,8 @@ services:
     container_name: elog_psql
     environment:
       POSTGRES_DB: 'elog'
-      POSTGRES_USER: 'user'
-      POSTGRES_PASSWORD: 'password'
+      POSTGRES_USER: 'elog'
+      POSTGRES_PASSWORD: 'elogPass'
     expose:
       - 5432
     volumes:
