@@ -7,8 +7,8 @@ services:
     container_name: elog_nexus_db
     environment:
       POSTGRES_DB: 'elog'
-      POSTGRES_USER: 'user'
-      POSTGRES_PASSWORD: 'password'
+      POSTGRES_USER: 'elog'
+      POSTGRES_PASSWORD: 'elogPass'
     ports:
       - '5760:5432'
     volumes:
