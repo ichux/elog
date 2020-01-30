@@ -37,6 +37,11 @@ help:
 	@echo "  access         grants access to a user"
 	@echo "  details        displays the details of a user"
 	@echo "  config         displays the docker configuration"
+	@echo "  ps             runs the docker ps command"
+	@echo "  run            starts the application in debug mode with the flask cli"
+	@echo "  viup           bring the supervisorctl up"
+	@echo "  vidown         take the supervisorctl down"
+	@echo "  vistat         tells you the status of supervisor"
 
 
 clean:
@@ -44,7 +49,7 @@ clean:
 	find . -name '__pycache__' -type d -print0 | xargs -0 /bin/rm -rf '{}'
 
 bash: clean
-	docker-compose run --rm serve bash
+	docker exec -it elog_flap bash
 
 logs:
 	docker-compose logs  --timestamps --follow
@@ -144,3 +149,18 @@ details:
 
 config:
 	docker-compose config
+
+ps:
+	docker-compose ps
+
+run:
+	flask run --host 0.0.0.0
+
+viup:
+	supervisorctl start all
+
+vidown:
+	supervisorctl stop all
+
+vistat:
+	supervisorctl status

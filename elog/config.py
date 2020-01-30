@@ -1,9 +1,9 @@
 import os
 
-POSTGRES_DB = os.getenv('ELOG_DB')
-POSTGRES_USER = os.getenv('ELOG_USER')
-POSTGRES_PASSWORD = os.getenv('ELOG_PASSWORD')
-POSTGRES_HOST = os.getenv('ELOG_HOST')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 

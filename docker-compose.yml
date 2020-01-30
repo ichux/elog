@@ -1,26 +1,45 @@
 version: '3.7'
 
 services:
+  buildev:
+    build:
+      context: .
+      dockerfile: base.Dockerfile
+    image: buildev
+
   database:
     image: postgres:12.0-alpine
     restart: always
     container_name: elog_psql
     environment:
-      POSTGRES_DB: 'elog'
-      POSTGRES_USER: 'elog'
-      POSTGRES_PASSWORD: 'elogPass'
-    expose:
-      - 5432
+      POSTGRES_DB: elog
+      POSTGRES_USER: elog
+      POSTGRES_PASSWORD: elogPass
+    ports:
+      - 9010:5432
     volumes:
       - $HOME/elog_psql:/var/lib/postgresql/data
 
+  sqlgui:
+    image: adminer
+    ports:
+      - 9020:8080
+    environment:
+      - ADMINER_DEFAULT_SERVER=database
+      - ADMINER_PLUGINS=tables-filter tinymce
+      - ADMINER_DESIGN=pepa-linha
+    depends_on:
+      - database
+
   serve:
-    build: ./elog
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
     restart: always
-    command: flask run
+    command: supervisord
     container_name: elog_flap
     volumes:
-      - .:/code
+      - .:/var/www/
     environment:
       FLASK_ENV: development
       FLASK_SKIP_DOTENV: 0
@@ -32,12 +51,14 @@ services:
       SECRET_KEY: a9f376ad59510f88f9be5ec886b0e^3qTnVnRh[g.0d522fd2c4f2d68ba7Qx839449a044bf647
       ELAP_STATUS: elog.config.DevelopmentConfig
 
-      ELOG_DB: elog
-      ELOG_USER: user
-      ELOG_PASSWORD: password
-      ELOG_HOST: database
+      POSTGRES_DB: elog
+      POSTGRES_USER: elog
+      POSTGRES_PASSWORD: elogPass
+      POSTGRES_HOST: database
 
     ports:
-      - '9020:5000'
+      - 9030:80
+      - 9040:5000
     depends_on:
+      - buildev
       - database
