@@ -5,3 +5,4 @@ __pycache__/
 .idea
 keeps
 logsdir
+elog.sock
