@@ -6,3 +6,4 @@ __pycache__/
 keeps
 logsdir
 elog.sock
+uwsgi.sock
