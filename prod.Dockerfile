@@ -2,8 +2,9 @@ FROM buildev
 
 ENV PYTHONUNBUFFERED 1
 
-COPY serverConfigs/elog.conf /etc/nginx/sites-available/
-COPY serverConfigs/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY customize/elog.conf /etc/nginx/sites-available/
+COPY customize/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY customize/bashrc /root/.bashrc
 
 WORKDIR /var/www/
 COPY . .
