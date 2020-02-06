@@ -29,7 +29,6 @@ help:
 	@echo "  dd_no_sql       to make a development migration downgrade, not showing the sql"
 	@echo "  dbc             shows the current migration"
 
-	@echo "  runtests       to make the unittest run"
 	@echo "  updates        to make git updates and show branch"
 	@echo "  key            generates random secret key to sign the application. Keep it secure!"
 	@echo "  auth           add a user with specified parameters to the DB"
@@ -119,9 +118,6 @@ dd_no_sql:
 
 dbc:
 	docker-compose run --rm serve flask dbc
-
-runtests:
-	docker-compose run --rm serve python -m unittest discover -s tests/
 
 updates:
 	git checkout master && git fetch && git merge origin/master; echo
