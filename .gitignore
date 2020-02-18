@@ -1,8 +1,6 @@
 __pycache__/
+data/
 *.py[cod]
 *$py.class
 .DS_Store
 .idea
-keeps
-logsdir
-*.sock
