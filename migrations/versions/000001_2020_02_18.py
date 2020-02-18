@@ -1,8 +1,8 @@
-"""2019_12_04
+"""2020_02_18
 
 Revision ID: 000001
 Revises: 
-Create Date: 2019-12-04 06:44:09.482868
+Create Date: 2020-02-18 03:57:38.958091
 
 """
 import sqlalchemy as sa
@@ -36,7 +36,7 @@ def upgrade():
                     sa.Column('ip_address', sa.String(length=15), nullable=False),
                     sa.Column('external_app_id', sa.String(length=15), nullable=False),
                     sa.Column('users_id', sa.BigInteger(), nullable=False),
-                    sa.ForeignKeyConstraint(('users_id',), ['users.id'], name=op.f('fk_user_accesses_users_id_users'),
+                    sa.ForeignKeyConstraint(['users_id'], ['users.id'], name=op.f('fk_user_accesses_users_id_users'),
                                             onupdate='CASCADE', ondelete='CASCADE'),
                     sa.PrimaryKeyConstraint('id', name=op.f('pk_user_accesses')),
                     sa.UniqueConstraint('users_id', 'ip_address', 'external_app_id',

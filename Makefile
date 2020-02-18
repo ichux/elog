@@ -41,6 +41,7 @@ help:
 	@echo "  viup           bring the supervisorctl up"
 	@echo "  vidown         take the supervisorctl down"
 	@echo "  vistat         tells you the status of supervisor"
+	@echo "  migrate         to make migrations reflect in the DB"
 
 
 clean:
@@ -160,3 +161,7 @@ vidown:
 
 vistat:
 	supervisorctl status
+
+migrate:
+	make cls
+	sh entrypoint.sh
