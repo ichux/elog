@@ -4,3 +4,4 @@ data/
 *$py.class
 .DS_Store
 .idea
+supervisord.log

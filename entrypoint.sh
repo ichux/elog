@@ -21,7 +21,7 @@ if [ -d "$LOCATION" ]; then
 fi
 
 if [ "$1" = 'supervisord' ]; then
-    exec /usr/bin/supervisord
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 fi
 
 exec "$@"
