@@ -1,0 +1,5 @@
+cryptography==3.4.7
+Flask-Migrate==3.0.1
+requests==2.25.1
+Whoosh==2.7.4
+WTForms==2.3.3

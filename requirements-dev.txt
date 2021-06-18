@@ -1,0 +1,13 @@
+black
+coverage
+isort
+ipython
+mypy
+pylint
+sphinx
+twine
+wheel
+python-dotenv
+
+# install all found in the file below
+-r requirements.txt
