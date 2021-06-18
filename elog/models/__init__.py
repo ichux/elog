@@ -58,7 +58,7 @@ class HouseKeeping(object):
         return result
 
     def __repr__(self):
-        return '%s(%s)' % (self.__class__.__name__, self.id)
+        return "%s(%s)" % (self.__class__.__name__, self.id)
 
     @classmethod
     def columns(cls):
@@ -70,12 +70,18 @@ class HouseKeeping(object):
         Returns a relationship and indicates if it's a list (True) or not
         :return: list
         """
-        return [[_, "is_list: {}".format(cls.__mapper__.relationships[_].uselist)] for _ in
-                cls.__mapper__.relationships.keys()]
+        return [
+            [_, "is_list: {}".format(cls.__mapper__.relationships[_].uselist)]
+            for _ in cls.__mapper__.relationships.keys()
+        ]
 
     @classmethod
     def get_field_and_relationships(cls):
-        return dict(table_name=cls.__table__.name, columns=cls.columns(), relationships=cls.relationships())
+        return dict(
+            table_name=cls.__table__.name,
+            columns=cls.columns(),
+            relationships=cls.relationships(),
+        )
 
 
 class Base(db.Model, HouseKeeping):
@@ -84,7 +90,9 @@ class Base(db.Model, HouseKeeping):
     __abstract__ = True
 
     added_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    modified_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    modified_on = db.Column(
+        db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     # BigInteger range: -9223372036854775808 to 9223372036854775807
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
@@ -104,13 +112,13 @@ def date_handler(value):
     :param value: datetime of Python
     :return: string
     """
-    return value.isoformat() if hasattr(value, 'isoformat') else value
+    return value.isoformat() if hasattr(value, "isoformat") else value
 
 
 # noinspection PyProtectedMember
 def get_class_by_tablename(tablename):
     for c in db.Model._decl_class_registry.values():
-        if hasattr(c, '__tablename__') and c.__tablename__ == tablename:
+        if hasattr(c, "__tablename__") and c.__tablename__ == tablename:
             return c
 
 
@@ -122,30 +130,32 @@ def json_data(tablename, _id):
     :param _id: the id of the table to query
     :return: json format
     """
-    return dumps(get_class_by_tablename(tablename).query.get(_id).as_dict(), default=date_handler)
+    return dumps(
+        get_class_by_tablename(tablename).query.get(_id).as_dict(), default=date_handler
+    )
 
 
 def cleanup():
     db.session.rollback()
     db.session.commit()
-    print('DB in a clean state')
+    print("DB in a clean state")
 
 
 def latest(_class):
     db.engine.echo = False
     try:
-        print('\n')
+        print("\n")
         return _class.query.order_by(_class.id.desc()).first().display()
-    except (Exception,) as e:
+    except (Exception,):
         cleanup()
-        print('\nNo data found')
+        print("\nNo data found")
 
 
 # noinspection PyProtectedMember
 def show_all():
     classes, models, table_names = [], [], []
     for clazz in db.Model._decl_class_registry.values():
-        if hasattr(clazz, '__tablename__'):
+        if hasattr(clazz, "__tablename__"):
             table_names.append(clazz.__tablename__)
             classes.append(clazz)
 
@@ -160,7 +170,7 @@ def show_all():
 def show_classes():
     classes = []
     for clazz in db.Model._decl_class_registry.values():
-        if hasattr(clazz, '__tablename__'):
+        if hasattr(clazz, "__tablename__"):
             classes.append(clazz)
     return classes  # classes[0].query.get(1)
 
@@ -168,7 +178,7 @@ def show_classes():
 # noinspection PyProtectedMember
 def get_class(table_name):
     for clazz in db.Model._decl_class_registry.values():
-        if hasattr(clazz, '__tablename__'):
+        if hasattr(clazz, "__tablename__"):
             if clazz.__tablename__ == table_name:
                 return clazz
     return None

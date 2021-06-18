@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
-from wtforms.validators import DataRequired, Length  # , Email
-
+from wtforms import PasswordField, StringField
+from wtforms.validators import DataRequired  # Length, Email
 
 # from elog.forms import Unique
 # from elog.models.authenticate import User
@@ -14,5 +13,9 @@ from wtforms.validators import DataRequired, Length  # , Email
 
 
 class ErrorLoginUserForm(FlaskForm):
-    username = StringField('username', [DataRequired("Username is required")])  # , Length(min=4, max=25)
-    password = PasswordField('password', [DataRequired("Password is required")])  # , Length(min=6, max=200)
+    username = StringField(
+        "username", [DataRequired("Username is required")]
+    )  # , Length(min=4, max=25)
+    password = PasswordField(
+        "password", [DataRequired("Password is required")]
+    )  # , Length(min=6, max=200)

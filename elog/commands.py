@@ -4,23 +4,25 @@ import time
 from datetime import datetime
 
 import click
-from flask_migrate import init, migrate, revision, upgrade, current, downgrade
+from flask_migrate import current, downgrade, init, migrate, revision, upgrade
 
-from elog import elap, db
+from elog import db, elap
 from elog.models.profile import User, UserAccess
 
 
 class Usable(object):
     def __init__(self):
         self.time = datetime.utcfromtimestamp(time.time())
-        self.directory = os.path.join(os.getcwd(), 'migrations', 'versions')
+        self.directory = os.path.join(os.getcwd(), "migrations", "versions")
 
     def message(self):
         return self.time.strftime("%Y_%m_%d")
 
     def revision_id(self):
         path, dirs, files = next(os.walk(self.directory))
-        return str(len([file_ for file_ in files if file_.endswith('.py')]) + 1).zfill(6)
+        return str(len([file_ for file_ in files if file_.endswith(".py")]) + 1).zfill(
+            6
+        )
 
 
 @elap.cli.command("dbi")
@@ -100,8 +102,8 @@ def downgrade_no_sql():
 
 
 @elap.cli.command("auth")
-@click.argument('username')
-@click.argument('password')
+@click.argument("username")
+@click.argument("password")
 def add_auth(username, password):
     """
     It adds a User to the DB
@@ -113,11 +115,11 @@ def add_auth(username, password):
 
     db.session.add(user)
     db.session.commit()
-    print(f'\n`{username}` with id={user.id} has been added to the DB\n')
+    print(f"\n`{username}` with id={user.id} has been added to the DB\n")
 
 
 @elap.cli.command("usid")
-@click.argument('username')
+@click.argument("username")
 def user_id(username):
     """
     It gets a user id from the DB
@@ -126,14 +128,14 @@ def user_id(username):
 
     user = User.query.filter_by(username=username).first()
     if user:
-        print(f'\n{username} with id={user.id} was found\n')
+        print(f"\n{username} with id={user.id} was found\n")
     else:
-        print(f'\nThe username `{username}` was not found!\n')
+        print(f"\nThe username `{username}` was not found!\n")
 
 
 @elap.cli.command("access")
-@click.argument('username')
-@click.argument('ip_address')
+@click.argument("username")
+@click.argument("ip_address")
 def add_access(username, ip_address):
     """
     It adds an access for a User to the DB
@@ -147,13 +149,13 @@ def add_access(username, ip_address):
 
         db.session.add(user_access)
         db.session.commit()
-        print(f'\n`external_app_id = {user_access.external_app_id}`\n')
+        print(f"\n`external_app_id = {user_access.external_app_id}`\n")
     else:
-        print(f'\nThe username `{username}` was not found!\n')
+        print(f"\nThe username `{username}` was not found!\n")
 
 
 @elap.cli.command("details")
-@click.argument('username')
+@click.argument("username")
 def details(username):
     """
     It adds a User to the DB
@@ -162,9 +164,9 @@ def details(username):
 
     user = User.query.filter_by(username=username).first()
     if user:
-        print('\n')
+        print("\n")
         for _ in user.known_access:
             _.display()
-            print('\n')
+            print("\n")
     else:
-        print(f'\nThe username `{username}` was not found!\n')
+        print(f"\nThe username `{username}` was not found!\n")

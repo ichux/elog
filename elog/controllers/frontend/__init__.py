@@ -1,7 +1,7 @@
 from flask import Blueprint, g
 from flask_login import current_user
 
-frontend = Blueprint('frontend', __name__)
+frontend = Blueprint("frontend", __name__)
 
 from elog.controllers.frontend import frontend_view
 

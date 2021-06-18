@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-auth = Blueprint('auth', __name__)
+auth = Blueprint("auth", __name__)
 
 from elog.controllers.auth import auth_view
 

@@ -3,11 +3,11 @@ from pprint import pprint
 from sqlalchemy import MetaData
 
 convention = {
-    "ix": 'ix_%(column_0_label)s',
+    "ix": "ix_%(column_0_label)s",
     "uq": "uq_%(table_name)s_%(column_0_name)s",
     "ck": "ck_%(table_name)s_%(constraint_name)s",
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-    "pk": "pk_%(table_name)s"
+    "pk": "pk_%(table_name)s",
 }
 
 metadata = MetaData(naming_convention=convention)
@@ -18,6 +18,7 @@ class InvalidAuthentication(ValueError):
 
 
 # vars = extract_vars(request.form)
+
 
 def extract_vars(form):
     _dict = {}
@@ -43,8 +44,8 @@ def prepare_arguments(request_args):
         try:
             request_values[key] = int(value)
         except ValueError:
-            if value in ('true', 'false'):
-                request_values[key] = value == 'true'
+            if value in ("true", "false"):
+                request_values[key] = value == "true"
             else:  # assume string
                 request_values[key] = value
     return request_values
@@ -57,6 +58,7 @@ def details(obj):
     :return: a pretty print representation
     """
     pprint(vars(obj))
+
 
 #
 # def looked(qs, pagenum, pagelen, locate):
