@@ -1,0 +1,8 @@
+repos:
+-   repo: local
+    hooks:
+      - id: ci
+        name: ci
+        entry: make ci
+        language: python
+        types: [python]

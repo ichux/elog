@@ -3,6 +3,9 @@ coverage
 isort
 ipython
 mypy
+pytest
+pytest--cov
+flake8
 pylint
 sphinx
 twine

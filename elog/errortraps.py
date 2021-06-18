@@ -6,6 +6,7 @@ import traceback
 from datetime import datetime
 
 from flask import request
+
 from elog.helpers import extract_vars
 
 
@@ -20,11 +21,11 @@ def distinct_id(length=64):
 
 def tracer(start, middle, tb, limit=None):
     if limit is None:
-        if hasattr(sys, 'tracebacklimit'):
+        if hasattr(sys, "tracebacklimit"):
             limit = sys.tracebacklimit
 
-    error_type, error_msg = '{}'.format(start), '{}'.format(middle)
-    n, error_traceback, terminator = 0, '', '\n'
+    error_type, error_msg = "{}".format(start), "{}".format(middle)
+    n, error_traceback, terminator = 0, "", "\n"
 
     while tb is not None and (limit is None or n < limit):
         f = tb.tb_frame
@@ -33,13 +34,15 @@ def tracer(start, middle, tb, limit=None):
         filename = co.co_filename
         name = co.co_name
 
-        error_traceback += 'File "%s", line %d, in %s' % (filename, lineno, name) + terminator
+        error_traceback += (
+            'File "%s", line %d, in %s' % (filename, lineno, name) + terminator
+        )
 
         linecache.checkcache(filename)
         line = linecache.getline(filename, lineno, f.f_globals)
 
         if line:
-            error_traceback += '  ' + line.strip() + terminator
+            error_traceback += "  " + line.strip() + terminator
         tb = tb.tb_next
         n += 1
 
@@ -61,50 +64,55 @@ def log_details(code, display=False):
     :return: json
     """
     noticed = datetime.utcnow()
-    error_time = noticed.isoformat() + 'Z'
+    error_time = noticed.isoformat() + "Z"
     # data = dict((key, request.form.getlist(key) if len(request.form.getlist(key)) > 1 else
     # request.form.getlist(key)[0]) for key in request.form.keys())
 
     data = request.form  # extract_vars(request.form)
 
-    if 'password' in extract_vars(request.form).keys():
+    if "password" in extract_vars(request.form).keys():
         data = dict(data)
-        data.pop('password', None)  # removes the password if found, else remove what suites you
+        data.pop(
+            "password", None
+        )  # removes the password if found, else remove what suites you
 
     error_type, error_msg, error_traceback = tracer(*sys.exc_info())
 
     if display:
         traceback.print_exception(*sys.exc_info())
 
-    return {'id': distinct_id(),
-            'ip': str(get_real_ip()),
-            'requestpath': request.path,
-            'httpmethod': str(request.method),
-            'useragent': str(request.user_agent.string),
-            'userplatform': str(request.user_agent.platform),
-            'userbrowser': str(request.user_agent.browser),
-            'userbrowserversion': str(request.user_agent.version),
-            'referrer': str(request.referrer),
-            # json.dumps(request.args, indent=1, sort_keys=True)
-            'requestargs': json.dumps(request.args),  # request.args.to_dict()
-            'postvalues': json.dumps(data),  # json.dumps(data, indent=1, sort_keys=True)
-            'errortype': str(error_type),
-            'errormsg': str(error_msg.encode('utf-8')),
-            'when': str(error_time),
-            'errortraceback': str(error_traceback),
-            'code': code,  # This is a NUMERIC field in Whoosh
-            'date': noticed  # this line is essential to be able to make the query "date:today" work!
-            }
+    return {
+        "id": distinct_id(),
+        "ip": str(get_real_ip()),
+        "requestpath": request.path,
+        "httpmethod": str(request.method),
+        "useragent": str(request.user_agent.string),
+        "userplatform": str(request.user_agent.platform),
+        "userbrowser": str(request.user_agent.browser),
+        "userbrowserversion": str(request.user_agent.version),
+        "referrer": str(request.referrer),
+        # json.dumps(request.args, indent=1, sort_keys=True)
+        "requestargs": json.dumps(request.args),  # request.args.to_dict()
+        "postvalues": json.dumps(data),  # json.dumps(data, indent=1, sort_keys=True)
+        "errortype": str(error_type),
+        "errormsg": str(error_msg.encode("utf-8")),
+        "when": str(error_time),
+        "errortraceback": str(error_traceback),
+        "code": code,  # This is a NUMERIC field in Whoosh
+        "date": noticed,  # this line is essential to be able to make the query "date:today" work!
+    }
 
 
 def get_real_ip():
     # use all known hack to get the real ip address of the visitor who caused the error
-    address = request.headers.get('X-Forwarded-For')
+    address = request.headers.get("X-Forwarded-For")
     if address is not None:
         # An 'X-Forwarded-For' header includes a comma separated list of the
         # addresses, the first address being the actual remote address.
-        ip = address.encode('utf-8').split(b',')[0].strip()
+        ip = address.encode("utf-8").split(b",")[0].strip()
     else:
         # this is the original way of getting the IP in this application
-        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)  # This is important for nginx config
+        ip = request.environ.get(
+            "HTTP_X_REAL_IP", request.remote_addr
+        )  # This is important for nginx config
     return ip

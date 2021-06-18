@@ -14,7 +14,7 @@ from elog import advsearch
 from elog.helpers import metadata
 
 elap = application = Flask(__name__)
-elap.config.from_object(os.getenv('ELAP_STATUS'))
+elap.config.from_object(os.getenv("ELAP_STATUS"))
 
 csrf = CSRFProtect(elap)
 db = SQLAlchemy(elap, metadata=metadata)
@@ -23,7 +23,7 @@ Migrate(elap, db)
 # manage login
 login_manager = LoginManager()
 login_manager.init_app(elap)
-login_manager.login_view = 'auth.login'
+login_manager.login_view = "auth.login"
 
 
 def ix_searcher(locate):
@@ -33,9 +33,9 @@ def ix_searcher(locate):
     return ix
 
 
-def remove_by_id(doc_id, locate='ELIX'):
+def remove_by_id(doc_id, locate="ELIX"):
     writes = AsyncWriter(ix_searcher(locate))
-    writes.delete_by_term('id', doc_id)
+    writes.delete_by_term("id", doc_id)
     writes.commit()
 
 
@@ -55,9 +55,17 @@ def data_tables_display(qs, pagenum, pagelen, locate):
         # print 'details' in searcher.schema.names()  # checks for the presence of a field in the schema
         # fieldboosts = {"code": 2.0, "id": 0.5}
         # 500^2 or code:500^2 are same as hard coding the fieldboosts added to the "MultifieldParser"
-        query = qparser.MultifieldParser(["errormsg", "errortype", "id", "ip", "code", "date", "when"], searcher.schema)
-        query.add_plugins((DateParserPlugin(), qparser.GtLtPlugin(),
-                           qparser.SequencePlugin("!(~(?P<slop>[1-9][0-9]*))?")))
+        query = qparser.MultifieldParser(
+            ["errormsg", "errortype", "id", "ip", "code", "date", "when"],
+            searcher.schema,
+        )
+        query.add_plugins(
+            (
+                DateParserPlugin(),
+                qparser.GtLtPlugin(),
+                qparser.SequencePlugin("!(~(?P<slop>[1-9][0-9]*))?"),
+            )
+        )
         # details(query)
 
         # pagelen = min(pagelen, current_app.config['MAX_WHOOSH_SEARCH_RESULTS'])
@@ -65,7 +73,7 @@ def data_tables_display(qs, pagenum, pagelen, locate):
         try:
             # this has to be done because the jQuery datatables might throw in an int which
             # whoosh does not need. It needs all its values to be of <type 'unicode'>
-            getattr(qs, 'decode')
+            getattr(qs, "decode")
         except AttributeError:
             qs = str(qs)
 
@@ -80,9 +88,13 @@ def data_tables_display(qs, pagenum, pagelen, locate):
 
             mf = sorting.MultiFacet()
             # mf.add_field("code", reverse=True)
-            mf.add_field("date", reverse=True)  # sorts the result in descending order by date
+            mf.add_field(
+                "date", reverse=True
+            )  # sorts the result in descending order by date
 
-            results = searcher.search_page(query.parse(qs), pagenum, pagelen, sortedby=mf, terms=True)
+            results = searcher.search_page(
+                query.parse(qs), pagenum, pagelen, sortedby=mf, terms=True
+            )
         except (Exception,) as exc:
             results = {}
 
@@ -123,25 +135,33 @@ def data_tables_display(qs, pagenum, pagelen, locate):
         for step in output:
             errortraceback = step.get("errortraceback")
             if errortraceback:
-                step['errortraceback'] = errortraceback.replace('\n', '<br>')
+                step["errortraceback"] = errortraceback.replace("\n", "<br>")
                 pushout.append(step)
 
-        return {'recordsTotal': searcher.reader().doc_count(), 'recordsFiltered': len(results), 'data': pushout}
+        return {
+            "recordsTotal": searcher.reader().doc_count(),
+            "recordsFiltered": len(results),
+            "data": pushout,
+        }
 
 
-fortress = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../logsdir"))
+fortress = os.path.realpath(
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), "../logsdir")
+)
 
 # create FORTRESS directory
 if not os.path.exists(fortress):
     try:
         os.mkdir(fortress)
-    except (Exception,) as e:
+    except (Exception,):
         pass
 
-if not index.exists_in(fortress, indexname='elogindex'):
-    elap.config.update(ELIX=index.create_in(fortress, advsearch.ErrorLogsSchema, indexname='elogindex'))
+if not index.exists_in(fortress, indexname="elogindex"):
+    elap.config.update(
+        ELIX=index.create_in(fortress, advsearch.ErrorLogsSchema, indexname="elogindex")
+    )
 else:
-    elap.config.update(ELIX=index.open_dir(fortress, indexname='elogindex'))
+    elap.config.update(ELIX=index.open_dir(fortress, indexname="elogindex"))
 
 
 def write_async(kwargs, where):
@@ -169,12 +189,14 @@ def begin_async_commit(app, **extra):
     :param extra: some parameters
     :return: None
     """
-    write_async(extra.get('result'), where=extra.get('where'))
+    write_async(extra.get("result"), where=extra.get("where"))
 
 
 generated_signals = Namespace()
-error_signal_sent = generated_signals.signal('error-sent-signal')
-error_signal_sent.connect(begin_async_commit, elap)  # using connect to register a signal callback
+error_signal_sent = generated_signals.signal("error-sent-signal")
+error_signal_sent.connect(
+    begin_async_commit, elap
+)  # using connect to register a signal callback
 
 
 # noinspection PyUnresolvedReferences
@@ -184,15 +206,15 @@ def load_user(_id):
 
 
 import elog.commands
-
-# Business Logic
-from elog.controllers.frontend import frontend
 from elog.controllers.apiv1 import v1_api
 from elog.controllers.auth import auth
 
+# Business Logic
+from elog.controllers.frontend import frontend
+
 elap.register_blueprint(frontend)
-elap.register_blueprint(v1_api, url_prefix='/api/v1.0')
-elap.register_blueprint(auth, url_prefix='/auth')
+elap.register_blueprint(v1_api, url_prefix="/api/v1.0")
+elap.register_blueprint(auth, url_prefix="/auth")
 
 from elog import errorhandlers
 from elog.models.profile import User, UserAccess
