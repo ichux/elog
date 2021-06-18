@@ -13,7 +13,7 @@ RUN mkdir -p /var/log/supervisor && rm /etc/nginx/sites-enabled/default \
     && ln -s /etc/nginx/sites-available/elog.conf /etc/nginx/sites-enabled/elog.conf \
     && echo "daemon off;" >> /etc/nginx/nginx.conf \
     &&  pip3.7 --trusted-host pypi.python.org install -U pip setuptools uwsgi \
-    && pip3.7 --trusted-host pypi.python.org install -r /var/www/elog/requirements.txt \
+    && pip3.7 --trusted-host pypi.python.org install -r /var/www/elog/requirements-dev.txt \
     && chown -R www-data:www-data /var/log
 
 EXPOSE 5000
