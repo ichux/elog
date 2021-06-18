@@ -32,4 +32,5 @@ docker-compose.yml file but it does not work in a production environment outside
 3. Follow `CLEAN UP` stated [here](edock/steps.txt) to clean up after you are done
 
 # Important
-Some commands like `make usid`, `make auth` have commented lines in the [Makefile](Makefile) on how to use them.
+1. Some commands like `make usid`, `make auth` have commented lines in the [Makefile](Makefile) on how to use them.
+2. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*

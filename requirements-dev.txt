@@ -11,6 +11,7 @@ sphinx
 twine
 wheel
 python-dotenv
+pre-commit
 
 # install all found in the file below
 -r requirements.txt
