@@ -379,3 +379,8 @@ dist-test: dist
 dist-upload:
 	twine upload dist/elog-*-py3-none-any.whl
 
+
+# help: gm                    - runs "git fetch && git merge origin/master"
+.PHONY: gm
+gm:
+	git fetch && git merge origin/master
