@@ -16,6 +16,10 @@ Important: *cp .prime.env .env*
 >   b. then type `touch wsgi.py`
 > 3. If you need auto-reload during development, then type `make run`
 
+# To run the application for development
+1. type `make bash` to enter the container
+2. run `flask run --host 0.0.0.0`
+
 # Bootstrap the application
 1. `make bde` *OR* `make up`
 2. `make routes` displays all the routes so that you can know which one to work with

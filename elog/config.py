@@ -18,7 +18,7 @@ class Config(object):
     # SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class DevelopmentConfig(Config):
@@ -30,6 +30,7 @@ class DevelopmentConfig(Config):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///modelate.db'
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class LiveConfig(Config):
@@ -38,6 +39,7 @@ class LiveConfig(Config):
 
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class TestConfig(Config):

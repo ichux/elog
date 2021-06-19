@@ -1,5 +1,5 @@
-from elog import elap as app
+from elog import elap as application
 
 
 def make_app():
-    return app
+    return application
