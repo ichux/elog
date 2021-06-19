@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData  # type: ignore
 
 convention = {
     "ix": "ix_%(column_0_label)s",
@@ -25,7 +25,7 @@ def extract_vars(form):
     for key, value in form.items():
         if isinstance(value, list) and len(value) == 1:
             value = value[0]
-        if not key in _dict:
+        if key not in _dict:
             _dict[key] = value
         elif isinstance(_dict[key], list):
             _dict[key].append(value)

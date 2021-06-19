@@ -2,7 +2,7 @@ from flask import Blueprint
 
 auth = Blueprint("auth", __name__)
 
-from elog.controllers.auth import auth_view
+from elog.controllers.auth import auth_view  # noqa: F401 E402
 
 
 @auth.before_request

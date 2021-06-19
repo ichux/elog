@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 
 import click
-from flask_migrate import current, downgrade, init, migrate, revision, upgrade
+from flask_migrate import current, downgrade, init, migrate, revision, upgrade  # type: ignore
 
 from elog import db, elap
 from elog.models.profile import User, UserAccess

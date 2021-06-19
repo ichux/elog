@@ -1,5 +1,5 @@
 from flask import redirect, render_template, request, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user  # type: ignore
 
 from elog.controllers.auth import auth
 from elog.forms.error_login import ErrorLoginUserForm

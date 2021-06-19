@@ -1,49 +1,54 @@
-"""
-The models in this package would have to scale and as such, there would always be 2 model file:
-found in readonly and readwrite packages
-
-***readonly is to be used only for read requests
-***readwrite is to be used only for write requests.
-
-So, you should import it like this:
-from modelate.models.writeonly import user_wo
-And call it like this:
-user_wo.query.filter_by(username=username).first()
-
-OR
-
-from modelate.models.writeonly import *
-With the "import *", all the packages stated in the "__all__" variable would be visible in the scope of the file
-
-This method is to make it apparent when reading and writing to the database.
-
-And, most importantly, readonly and readwrite packages must always contain the same thing, only the
- __bind_key__ = 'readonly' should differ in the files with 'class'
-"""
 from collections import OrderedDict
 from datetime import datetime
 from json import dumps, loads
 from pprint import pprint
 
-from psycopg2.extensions import adapt as sqlescape
-from sqlalchemy.sql import compiler
+from psycopg2.extensions import adapt as sqlescape  # type: ignore
+from sqlalchemy.sql import compiler  # type: ignore
 
-from elog import db, elap
+from elog import db, elap  # type: ignore
 
 # CONSTANTS
 NAME = 400
 DESCRIPTION = 400
 
 # FOR THE DB
-CASCADE = elap.config.get("CASCADE")
-LAZY = elap.config.get("LAZY")
+CASCADE = elap.config.get("CASCADE")  # type: ignore
+LAZY = elap.config.get("LAZY")  # type: ignore
+
+
+def documentation():
+    """
+    The models in this package would have to scale and as such,
+    there would always be 2 model file:
+    found in readonly and readwrite packages
+
+    ***readonly is to be used only for read requests
+    ***readwrite is to be used only for write requests.
+
+    So, you should import it like this:
+    from modelate.models.writeonly import user_wo
+    And call it like this:
+    user_wo.query.filter_by(username=username).first()
+
+    OR
+
+    from modelate.models.writeonly import *
+    With the "import *", all the packages stated in the "__all__" variable
+    would be visible in the scope of the file
+
+    This method is to make it apparent when reading and writing to the database.
+
+    And, most importantly, readonly and readwrite packages must always contain
+    the same thing, only the
+     __bind_key__ = 'readonly' should differ in the files with 'class'"""
 
 
 # noinspection PyUnresolvedReferences
 class HouseKeeping(object):
     def add(self):
-        db.session.add(self)
-        db.session.commit()
+        db.session.add(self)  # type: ignore
+        db.session.commit()  # type: ignore
 
     def named(self):
         return self.__table__.name  # .lower()
@@ -84,19 +89,19 @@ class HouseKeeping(object):
         )
 
 
-class Base(db.Model, HouseKeeping):
+class Base(db.Model, HouseKeeping):  # type: ignore
     """Base model that other specific models inherit from"""
 
     __abstract__ = True
 
-    added_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    modified_on = db.Column(
-        db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
+    added_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # type: ignore
+    modified_on = db.Column(  # type: ignore
+        db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow  # type: ignore
     )
 
     # BigInteger range: -9223372036854775808 to 9223372036854775807
-    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    enabled = db.Column(db.Boolean, nullable=False, default=True)
+    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)  # type: ignore
+    enabled = db.Column(db.Boolean, nullable=False, default=True)  # type: ignore
 
 
 def remove_json_unwanted(*args):
@@ -117,7 +122,7 @@ def date_handler(value):
 
 # noinspection PyProtectedMember
 def get_class_by_tablename(tablename):
-    for c in db.Model._decl_class_registry.values():
+    for c in db.Model._decl_class_registry.values():  # type: ignore
         if hasattr(c, "__tablename__") and c.__tablename__ == tablename:
             return c
 
@@ -125,13 +130,15 @@ def get_class_by_tablename(tablename):
 # noinspection PyProtectedMember
 def json_data(tablename, _id):
     """
-    Returns the json representation of a table. It converts any datetime object to a string representation of the time
+    Returns the json representation of a table. It converts any datetime object to
+    a string representation of the time
     :param tablename: The name of the table: User.query.get(1).named()
     :param _id: the id of the table to query
     :return: json format
     """
     return dumps(
-        get_class_by_tablename(tablename).query.get(_id).as_dict(), default=date_handler
+        get_class_by_tablename(tablename).query.get(_id).as_dict(),
+        default=date_handler
     )
 
 

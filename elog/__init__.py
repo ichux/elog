@@ -2,13 +2,13 @@ import os
 
 from flask import Flask, current_app
 from flask.signals import Namespace
-from flask_login import LoginManager
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-from flask_wtf.csrf import CSRFProtect
-from whoosh import index, qparser, sorting
-from whoosh.qparser.dateparse import DateParserPlugin
-from whoosh.writing import AsyncWriter
+from flask_login import LoginManager  # type: ignore
+from flask_migrate import Migrate  # type: ignore
+from flask_sqlalchemy import SQLAlchemy  # type: ignore
+from flask_wtf.csrf import CSRFProtect  # type: ignore
+from whoosh import index, qparser, sorting  # type: ignore
+from whoosh.qparser.dateparse import DateParserPlugin  # type: ignore
+from whoosh.writing import AsyncWriter  # type: ignore
 
 from elog import advsearch
 from elog.helpers import metadata
@@ -95,7 +95,7 @@ def data_tables_display(qs, pagenum, pagelen, locate):
             results = searcher.search_page(
                 query.parse(qs), pagenum, pagelen, sortedby=mf, terms=True
             )
-        except (Exception,) as exc:
+        except (Exception,):
             results = {}
 
         output = []
@@ -205,16 +205,16 @@ def load_user(_id):
     return User.query.get(int(_id))
 
 
-import elog.commands
-from elog.controllers.apiv1 import v1_api
-from elog.controllers.auth import auth
+import elog.commands  # noqa: F401 E402
+from elog.controllers.apiv1 import v1_api  # noqa: F401 E402
+from elog.controllers.auth import auth  # noqa: F401 E402
 
 # Business Logic
-from elog.controllers.frontend import frontend
+from elog.controllers.frontend import frontend  # noqa: F401 E402
 
 elap.register_blueprint(frontend)
 elap.register_blueprint(v1_api, url_prefix="/api/v1.0")
 elap.register_blueprint(auth, url_prefix="/auth")
 
-from elog import errorhandlers
-from elog.models.profile import User, UserAccess
+from elog import errorhandlers  # noqa: F401 E402
+from elog.models.profile import User, UserAccess  # noqa: F401 E402

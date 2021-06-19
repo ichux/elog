@@ -255,10 +255,8 @@ test:
 	@python -m unittest discover -s tests  # pytest
 
 .PHONY: ci
-# help: ci				- these conditions have to pass before you can make a push
-#ci: lint typing test
-ci:
-	echo
+# help: ci			 	- these conditions have to pass before you can make a push
+ci: lint typing test
 
 
 # help: test-verbose                   - run tests [verbosely]
@@ -363,3 +361,11 @@ dist-test: dist
 .PHONY: dist-upload
 dist-upload:
 	@twine upload dist/elog-*-py3-none-any.whl
+
+
+# help: pgsql_bash                     - PostgreSQL bash
+.PHONY: pgsql_bash
+pgsql_bash:
+	@echo 'psql "postgresql://postgres:bbaeelog2bdf@elogpg:5432" -c "SHOW data_directory;"'
+	@echo 'psql "postgresql://elog:bbaeelog2bdf@elogpg:5432/elog" -c "SHOW data_directory;"'
+	@docker exec -it elog_psql bash

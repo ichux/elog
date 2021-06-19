@@ -1,5 +1,5 @@
 from flask import jsonify, render_template, request
-from flask_login import login_required
+from flask_login import login_required  # type: ignore
 
 from elog import data_tables_display, remove_by_id
 from elog.controllers.frontend import frontend
