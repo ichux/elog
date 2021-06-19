@@ -21,9 +21,12 @@ connection = psycopg2.connect(\n                \
  | /usr/bin/env python3 > /dev/null 2>&1
 
 # a hack to run migrations
-printf "import os; os.system('flask dbi > /dev/null 2>&1; \
-flask dbm > /dev/null 2>&1; flask dbu-no-sql > /dev/null 2>&1')" \
+printf 'import os\nimport subprocess\n\n\nwith open(os.devnull, "w") as pipe:\n    \
+subprocess.call(["flask", b"dbi"], stdout=pipe, stderr=subprocess.STDOUT)\n    \
+subprocess.call(["flask", b"dbm"], stdout=pipe, stderr=subprocess.STDOUT)\n    \
+subprocess.call(["flask", b"dbu-no-sql"], stdout=pipe, stderr=subprocess.STDOUT)' \
 | /usr/bin/env python3
+
 
 
 if [ "$1" = 'supervisord' ]; then
