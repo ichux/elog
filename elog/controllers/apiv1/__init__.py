@@ -2,7 +2,7 @@ from flask import Blueprint
 
 v1_api = Blueprint("apiv1", __name__)
 
-from elog.controllers.apiv1 import apiv1_view
+from elog.controllers.apiv1 import apiv1_view  # noqa: F401 E402
 
 
 @v1_api.before_request

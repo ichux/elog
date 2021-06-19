@@ -1,9 +1,9 @@
 from flask import Blueprint, g
-from flask_login import current_user
+from flask_login import current_user  # type: ignore
 
 frontend = Blueprint("frontend", __name__)
 
-from elog.controllers.frontend import frontend_view
+from elog.controllers.frontend import frontend_view  # noqa: F401 E402
 
 
 @frontend.before_request

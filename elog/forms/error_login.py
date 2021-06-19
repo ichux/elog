@@ -1,6 +1,8 @@
-from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField
-from wtforms.validators import DataRequired  # Length, Email
+from flask_wtf import FlaskForm  # type: ignore
+from wtforms import PasswordField, StringField  # type: ignore
+from wtforms.validators import DataRequired  # type: ignore
+
+# from wtforms.validators import DataRequired, Length, Email
 
 # from elog.forms import Unique
 # from elog.models.authenticate import User

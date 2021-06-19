@@ -1,4 +1,4 @@
-from wtforms.validators import ValidationError
+from wtforms.validators import ValidationError  # type: ignore
 
 
 class Unique(object):
