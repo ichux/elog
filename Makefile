@@ -24,12 +24,13 @@ clean:
 .PHONY: freeze
 # help: freeze				- freeze listed Python libraries
 freeze:
-	@pip freeze | egrep -i "requests|cryptography|wtforms|whoosh|flask-migrate" > requirements.txt
+	@pip freeze | egrep -i "requests|cryptography|wtforms|whoosh|flask-migrate|\
+	psycopg2-binary|uwsgi|flask-login|flask-wtf|blinker|passlib|python-dotenv" > requirements.txt
 
 
 .PHONY: bash
 # help: bash				- to make bash for the docker environment
-bash: clean
+bash:
 	docker exec -it elog_flap bash
 
 
@@ -41,8 +42,8 @@ logs:
 
 .PHONY: bde
 # help: bde				- to make build and then detach from the docker environment
-bde: clean
-	docker-compose up --build -d; docker-compose logs; docker-compose ps
+bde:
+	docker-compose up --build -d; docker-compose ps  # ; docker-compose logs
 
 
 .PHONY: up
@@ -260,12 +261,6 @@ typing:
 	mypy elog tests
 
 
-.PHONY: coverage
-# help: coverage			- runs pytest --cov=elog
-coverage:
-	pytest --cov=elog
-
-
 .PHONY: ci
 # help: ci				- for a sort passing of some conditions before it can be pushed
 ci: lint typing test
@@ -290,6 +285,7 @@ coverage:
 	coverage run -m unittest discover -s tests -v
 	@coverage html
 	@coverage report
+	@# pytest --cov=elog
 
 
 # help: format                         - perform code style format

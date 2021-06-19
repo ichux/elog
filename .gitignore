@@ -1,8 +1,12 @@
+logsdir/
 __pycache__/
 data/
 *.py[cod]
 *$py.class
 .DS_Store
 .idea
+
+supervisord.pid
 supervisord.log
+
 .env
