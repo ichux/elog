@@ -23,5 +23,6 @@ RUN pip3.8 --trusted-host pypi.python.org install --no-cache-dir -r /var/www/req
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 5000 9001
+
 ENTRYPOINT ["sh", "./entrypoint.sh"]
