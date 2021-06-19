@@ -18,11 +18,12 @@ connection = psycopg2.connect(\n                \
  return False\n        finally:\n            if connection:\n                \
  connection.close()\n\n    while True:\n        if connect():\n            \
  break\n\n        print('sleeping for 3s..')\n        time.sleep(3)\n\n\nprimes()" \
- | /usr/bin/env python3 && echo "DB is Up"
+ | /usr/bin/env python3 > /dev/null 2>&1
 
 # a hack to run migrations
-printf "import os; os.system('flask dbi; flask dbm; flask dbu-no-sql')" \
-  | /usr/bin/env python3
+printf "import os; os.system('flask dbi > /dev/null 2>&1; \
+flask dbm > /dev/null 2>&1; flask dbu-no-sql > /dev/null 2>&1')" \
+| /usr/bin/env python3
 
 
 if [ "$1" = 'supervisord' ]; then
