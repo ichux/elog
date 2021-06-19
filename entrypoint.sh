@@ -22,7 +22,6 @@ connection = psycopg2.connect(\n                \
 
 # a hack to run migrations
 printf 'import os\nimport subprocess\n\n\nwith open(os.devnull, "w") as pipe:\n    \
-subprocess.call(["flask", b"dbi"], stdout=pipe, stderr=subprocess.STDOUT)\n    \
 subprocess.call(["flask", b"dbm"], stdout=pipe, stderr=subprocess.STDOUT)\n    \
 subprocess.call(["flask", b"dbu-no-sql"], stdout=pipe, stderr=subprocess.STDOUT)' \
 | /usr/bin/env python3

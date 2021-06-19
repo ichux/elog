@@ -12,6 +12,8 @@ twine
 wheel
 python-dotenv
 pre-commit
+uwsgitop
+uwsgi
 
 # install all found in the file below
 -r requirements.txt
