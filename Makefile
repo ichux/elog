@@ -254,9 +254,16 @@ typing:
 test:
 	@python -m unittest discover -s tests  # pytest
 
+
+# help: cospell                          - performs codespell on it
+.PHONY: cospell
+cospell:
+	@codespell . --skip=*.js,*.txt,*.css --ignore-words-list=eith,gae \
+		--skip=./.* --quiet-level=2
+
 .PHONY: ci
 # help: ci			 	- these conditions have to pass before you can make a push
-ci: lint typing test
+ci: lint typing test cospell
 
 
 # help: test-verbose                   - run tests [verbosely]
@@ -293,13 +300,13 @@ sort-imports:
 	@isort . --profile black
 
 
-# help: check-sort-imports             - check imports are sorted
+# help: check-sort-imports             - checks imports are sorted
 .PHONY: check-sort-imports
 check-sort-imports:
 	@isort . --check-only --profile black
 
 
-# help: style                          - perform code style format
+# help: style                          - performs code style format
 .PHONY: style
 style: sort-imports format
 

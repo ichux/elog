@@ -1,4 +1,11 @@
-from whoosh.fields import DATETIME, ID, NUMERIC, STORED, TEXT, SchemaClass  # type: ignore
+from whoosh.fields import (  # type: ignore
+    DATETIME,
+    ID,
+    NUMERIC,
+    STORED,
+    TEXT,
+    SchemaClass,
+)
 
 
 class ErrorLogsSchema(SchemaClass):
