@@ -1,8 +1,8 @@
 from flask import jsonify, render_template
 
-from elog import elap as app
-from elog import error_signal_sent, errortraps
-from elog.helpers import InvalidAuthentication
+from . import elap as app
+from . import error_signal_sent, errortraps
+from .helpers import InvalidAuthentication
 
 DISPLAY = app.config.get("SHOW_ERROR_LOG")
 

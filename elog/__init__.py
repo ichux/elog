@@ -10,8 +10,8 @@ from whoosh import index, qparser, sorting  # type: ignore
 from whoosh.qparser.dateparse import DateParserPlugin  # type: ignore
 from whoosh.writing import AsyncWriter  # type: ignore
 
-from elog import advsearch
-from elog.helpers import metadata
+from . import advsearch
+from .helpers import metadata
 
 elap = application = Flask(__name__)
 elap.config.from_object(os.getenv("ELAP_STATUS"))

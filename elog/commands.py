@@ -13,8 +13,8 @@ from flask_migrate import (  # type: ignore
     upgrade,
 )
 
-from elog import db, elap
-from elog.models.profile import User, UserAccess
+from . import db, elap
+from .models.profile import User, UserAccess
 
 
 class Usable(object):
