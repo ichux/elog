@@ -28,6 +28,12 @@ freeze:
 	flask-login|flask-wtf|blinker|passlib|python-dotenv" > requirements.txt
 
 
+.PHONY: livereload
+# help: livereload				- live reload uwsgi
+livereload:
+	@docker exec -it elog_flap touch wsgi.py
+
+
 .PHONY: bash
 # help: bash				- to make bash for the docker environment
 bash:
