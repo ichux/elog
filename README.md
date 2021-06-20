@@ -2,26 +2,38 @@
 
 Collect your error logs in any application. This is a Flask app and this *README.md* is still being updated.
 
+# Before you begin
+1. *cp .prime.env .env* then alter to taste, if need be.
+2. run `python3 -m venv .venv; pip install -U pip setuptools wheel` to create a local environment, different from Docker's own
+3. run `pip install -r requirements-dev.txt`
+3. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
+
+# Note
+1. Ports are quoted here, e.g. 9030. Please note that if you have changed such quoted ports in your `.env` file,
+remember to change it to taste where appropriate.
+2. You are not to change the [.prime.env](.prime.env) file but you would have to create yours with `cp .prime.env .env`
+
 # How to use
-Care has been taken to ensure that the Makefile commands are all documented. But then, if there is anyone that is
-missing, do let me know by submitting a PR
+1. Type `make` and choose any command that shows afterwards
+2. To reload the application run by nginx: type `make livereload`
 
-Important: *cp .prime.env .env*
+# To create a user for the application
+1. Type `make auth u=username p=password`
+2. Visit http://127.0.0.1:9030/
+3. Enter the details you created in Step 1 above
 
-> 1. Type `make` and choose any command that shows afterwards
-> 2. To reload the application run by nginx
-
->   a. `make bash` to enter the container
-
->   b. then type `touch wsgi.py`
-> 3. If you need auto-reload during development, then type `make run`
+# To view app metrics or monitor it
+1. Activate your virtual environment (not inside the container)
+2. Type `make stats` or visit http://127.0.0.1:9030/stats
+3. [inet_http_server](customize/supervisord.conf) details
+4. Visit http://127.0.0.1:9050/ and use the credentials from Step 4. to access it
 
 # To run the application for development
 1. type `make bash` to enter the container
 2. run `flask run --host 0.0.0.0`
 
 # Bootstrap the application
-1. `make bde` *OR* `make up`
+1. `make bde`
 2. `make routes` displays all the routes so that you can know which one to work with
 3. `docker-compose ps` helps you see the running apps and the ports they are serving on
 
@@ -33,3 +45,6 @@ Important: *cp .prime.env .env*
 # Important
 1. Some commands like `make usid`, `make auth` have commented lines in the [Makefile](Makefile) on how to use them.
 2. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
+
+# PR
+If you find anything that need to be taken care of, please submit a PR.
