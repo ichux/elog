@@ -1,17 +1,18 @@
 FORMAT="\nID\t{{.ID}}\nIMAGE\t{{.Image}}\nCOMMAND\t{{.Command}}\nCREATED\t{{.RunningFor}}\nSTATUS\t\
 {{.Status}}\nPORTS\t{{.Ports}}\nNAMES\t{{.Names}}\n"
 
+
 # Do not remove this block. It is used by the 'help' rule when
 # constructing the help output.
 # help:
 # help: elog Makefile help
 # help:
 
+
 .PHONY: help
 # help: help				- Please use "make <target>" where <target> is one of
 help:
 	@grep "^# help\:" Makefile | sed 's/\# help\: //' | sed 's/\# help\://'
-
 
 
 .PHONY: clean
@@ -24,12 +25,13 @@ clean:
 .PHONY: freeze
 # help: freeze				- freeze listed Python libraries
 freeze:
-	@pip freeze | egrep -i "requests|cryptography|wtforms|whoosh|flask-migrate|psycopg2-binary|uwsgitop|\
-	flask-login|flask-wtf|blinker|passlib|python-dotenv" > requirements.txt
+	@pip freeze | egrep -i "requests|cryptography|wtforms|whoosh|flask-migrate|\
+	psycopg2-binary|uwsgitop|flask-login|flask-wtf|blinker|passlib|\
+	python-dotenv" > requirements.txt
 
 
 .PHONY: livereload
-# help: livereload				- live reload uwsgi
+# help: livereload			- live reload uwsgi
 livereload:
 	@docker exec -it elog_flap touch wsgi.py
 
@@ -183,7 +185,8 @@ updates:
 .PHONY: key
 # help: key				- generates random secret key to sign the application. Keep it secure!
 key:
-	@docker exec -it elog_flap python -c 'import os; print(os.urandom(32))'
+	@docker exec -it elog_flap python -c \
+	'import os, secrets; print(os.urandom(32)); print(secrets.token_hex(16))'
 
 
 .PHONY: auth
@@ -226,24 +229,6 @@ ps:
 	@docker-compose ps
 
 
-.PHONY: viup
-# help: viup				- bring the supervisorctl up
-viup:
-	@supervisorctl start all
-
-
-.PHONY: vidown
-# help: vidown				- take the supervisorctl down
-vidown:
-	@supervisorctl stop all
-
-
-.PHONY: vistat
-# help: vistat				- tells you the status of supervisor
-vistat:
-	@supervisorctl status
-
-
 .PHONY: lint
 # help: lint				- flake8 elog tests
 lint:
@@ -256,14 +241,14 @@ typing:
 	@mypy elog tests
 
 
-# help: test                           - run tests
 .PHONY: test
+# help: test                           - run tests
 test:
 	@python -m unittest discover -s tests  # pytest
 
 
-# help: cospell                          - performs codespell on it
 .PHONY: cospell
+# help: cospell                          - performs codespell on it
 cospell:
 	@codespell . --skip=*.js,*.txt,*.css --ignore-words-list=eith,gae \
 		--skip=./.* --quiet-level=2
@@ -273,14 +258,14 @@ cospell:
 ci: lint typing test cospell
 
 
-# help: test-verbose                   - run tests [verbosely]
 .PHONY: test-verbose
+# help: test-verbose                   - run tests [verbosely]
 test-verbose:
 	@python -m unittest discover -s tests -v
 
 
-# help: coverage                       - perform test coverage checks
 .PHONY: coverage
+# help: coverage                       - perform test coverage checks
 coverage:
 	@coverage erase
 	@coverage run -m unittest discover -s tests -v
@@ -289,96 +274,96 @@ coverage:
 	@# pytest --cov=elog
 
 
-# help: format                         - perform code style format
 .PHONY: format
+# help: format                         - perform code style format
 format:
 	@black elog tests
 
 
-# help: check-format                   - check code format compliance
 .PHONY: check-format
+# help: check-format                   - check code format compliance
 check-format:
 	@black --check elog tests
 
 
-# help: sort-imports                   - apply import sort ordering
 .PHONY: sort-imports
+# help: sort-imports                   - apply import sort ordering
 sort-imports:
 	@isort . --profile black
 
 
-# help: check-sort-imports             - checks imports are sorted
 .PHONY: check-sort-imports
+# help: check-sort-imports             - checks imports are sorted
 check-sort-imports:
 	@isort . --check-only --profile black
 
 
-# help: style                          - performs code style format
 .PHONY: style
+# help: style                          - performs code style format
 style: sort-imports format
 
 
-# help: check-style                    - check code style compliance
 .PHONY: check-style
+# help: check-style                    - check code style compliance
 check-style: check-sort-imports check-format
 
 
-# help: check-types                    - check type hint annotations
 .PHONY: check-types
+# help: check-types                    - check type hint annotations
 check-types:
 	@mypy -p elog --ignore-missing-imports
 
 
-# help: check-lint                     - run static analysis checks
 .PHONY: check-lint
+# help: check-lint                     - run static analysis checks
 check-lint:
 	@pylint --rcfile=.pylintrc elog ./tests
 
 
-# help: check-static-analysis          - check code style compliance
 .PHONY: check-static-analysis
+# help: check-static-analysis          - check code style compliance
 check-static-analysis: check-lint check-types
 
 
-# help: docs                           - generate project documentation
 .PHONY: docs
+# help: docs                           - generate project documentation
 docs: coverage
 	@cd docs; rm -rf source/api/elog*.rst source/api/modules.rst build/*
 	@cd docs; make html
 
 
-# help: check-docs                     - quick check docs consistency
 .PHONY: check-docs
+# help: check-docs                     - quick check docs consistency
 check-docs:
 	@cd docs; make dummy
 
 
-# help: serve-docs                     - serve project html documentation
 .PHONY: serve-docs
+# help: serve-docs                     - serve project html documentation
 serve-docs:
 	@cd docs/build; python -m http.server --bind 127.0.0.1
 
 
-# help: dist                           - create a wheel distribution package
 .PHONY: dist
+# help: dist                           - create a wheel distribution package
 dist:
 	@python setup.py bdist_wheel
 
 
-# help: dist-test                      - test a wheel distribution package
 .PHONY: dist-test
+# help: dist-test                      - test a wheel distribution package
 dist-test: dist
 	@cd dist && ../tests/test-dist.bash ./elog-*-py3-none-any.whl
 
 
-# help: dist-upload                    - upload a wheel distribution package
 .PHONY: dist-upload
+# help: dist-upload                    - upload a wheel distribution package
 dist-upload:
 	@twine upload dist/elog-*-py3-none-any.whl
 
 
-# help: pgsql_bash                     - PostgreSQL bash
 .PHONY: pgsql_bash
+# help: pgsql_bash                     - PostgreSQL bash
 pgsql_bash:
 	@echo 'psql "postgresql://postgres:bbaeelog2bdf@elogpg:5432" -c "SHOW data_directory;"'
 	@echo 'psql "postgresql://elog:bbaeelog2bdf@elogpg:5432/elog" -c "SHOW data_directory;"'
