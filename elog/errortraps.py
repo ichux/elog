@@ -44,7 +44,7 @@ def tracer(start, middle, tb, limit=None):
 
         if line:
             error_traceback += "  " + line.strip() + terminator
-            error_traceback += f"variables: {variables}" + terminator*2
+            error_traceback += f"variables: {variables}" + terminator * 2
 
         tb = tb.tb_next
         n += 1
