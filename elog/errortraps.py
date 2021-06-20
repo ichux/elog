@@ -7,7 +7,7 @@ from datetime import datetime
 
 from flask import request
 
-from elog.helpers import extract_vars
+from .helpers import extract_vars
 
 
 def distinct_id(length=64):

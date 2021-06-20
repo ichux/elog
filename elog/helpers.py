@@ -25,12 +25,14 @@ def extract_vars(form):
     for key, value in form.items():
         if isinstance(value, list) and len(value) == 1:
             value = value[0]
+
         if key not in _dict:
             _dict[key] = value
         elif isinstance(_dict[key], list):
             _dict[key].append(value)
         else:
             _dict[key] = [_dict[key], value]
+
     return _dict
 
 
