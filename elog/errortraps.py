@@ -32,10 +32,11 @@ def tracer(start, middle, tb, limit=None):
         lineno = tb.tb_lineno
         co = f.f_code
         filename = co.co_filename
-        name = co.co_name
+        function = co.co_name
+        variables = f.f_locals
 
         error_traceback += (
-            'File "%s", line %d, in %s' % (filename, lineno, name) + terminator
+            'File "%s", line %d, in %s' % (filename, lineno, function) + terminator
         )
 
         linecache.checkcache(filename)
@@ -43,6 +44,8 @@ def tracer(start, middle, tb, limit=None):
 
         if line:
             error_traceback += "  " + line.strip() + terminator
+            error_traceback += f"variables: {variables}" + terminator * 2
+
         tb = tb.tb_next
         n += 1
 
