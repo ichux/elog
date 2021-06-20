@@ -30,6 +30,6 @@ COPY . .
 #RUN chown -R ubuntu:ubuntu ./
 #USER ubuntu
 
-EXPOSE 5000 9001 9191
+EXPOSE 5000 9001
 
 ENTRYPOINT ["sh", "./entrypoint.sh"]
