@@ -47,4 +47,4 @@ remember to change it to taste where appropriate.
 2. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
 
 # PR
-If you find anything that need to be taken care of, please submit a PR.
+If you find anything that needs to be taken care of, please submit a PR.
