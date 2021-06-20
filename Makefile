@@ -37,7 +37,7 @@ bash:
 .PHONY: stats
 # help: stats				- show live uwsgi statistics
 stats:
-	@uwsgitop http://127.0.0.1:9060
+	@uwsgitop http://127.0.0.1:9030/stats
 
 
 .PHONY: logs
