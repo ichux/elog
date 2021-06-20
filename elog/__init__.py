@@ -43,7 +43,7 @@ def remove_by_id(doc_id, locate="ELIX"):
 def data_tables_display(qs, pagenum, pagelen, locate):
     """fetch archived error messages for display
     :param qs: the query string as sent from the web e.g. 'Rain* OR subdomain:asch OR address:osun'
-    :type qs: sting type
+    :type qs: string type
     :param locate: indicates the index to search
     :type locate: index of Whoosh type
     :param pagelen: the total amount we want to display per page e.g on page 1 display 20 items

@@ -137,8 +137,7 @@ def json_data(tablename, _id):
     :return: json format
     """
     return dumps(
-        get_class_by_tablename(tablename).query.get(_id).as_dict(),
-        default=date_handler
+        get_class_by_tablename(tablename).query.get(_id).as_dict(), default=date_handler
     )
 
 
@@ -194,13 +193,15 @@ def get_class(table_name):
 # noinspection PyArgumentList
 def compile_query(query):
     dialect = query.session.bind.dialect
-    statement = query.statement
-    comp = compiler.SQLCompiler(dialect, statement)
+
+    comp = compiler.SQLCompiler(dialect, query.statement)
     comp.compile()
+
     enc = dialect.encoding
     params = {}
     for k, v in comp.params.iteritems():
         if isinstance(v, str):
             v = v.encode(enc)
         params[k] = sqlescape(v)
+
     return (comp.string.encode(enc) % params).decode(enc)
