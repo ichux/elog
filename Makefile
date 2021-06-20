@@ -109,61 +109,62 @@ psdoc:
 .PHONY: routes
 # help: routes				- displays the application's routes
 routes:
-	@docker-compose run --rm serve flask routes
+	@docker exec -it elog_flap flask routes
 
 
 .PHONY: shell
 # help: shell				- displays the application's shell
 shell:
-	@docker-compose run --rm serve flask shell
+	@docker exec -it elog_flap flask shell
 
 
 .PHONY: dbi
 # help: dbi				- to make a development migration init
 dbi:
-	@docker-compose run --rm serve flask dbi
+	@docker exec -it elog_flap flask dbi
 
 
 .PHONY: dbm
 # help: dbm				- to make a development migration migrate
 dbm:
-	@docker-compose run --rm serve flask dbm
+	@docker exec -it elog_flap flask dbm
 
 
 .PHONY: dbr
 # help: dbr				- to make a development migration revision
 dbr:
-	@docker-compose run --rm serve flask dbr
+	@docker exec -it elog_flap flask dbr
 
 
 .PHONY: dbu_sql
 # help: dbu_sql				- to make a development migration upgrade, showing the sql
 dbu_sql:
-	@docker-compose run --rm serve flask dbu-sql
+	@docker exec -it elog_flap flask dbu-sql
 
 
 .PHONY: dbu_no_sql
 # help: dbu_no_sql			- to make a development migration upgrade, not showing the sql
 dbu_no_sql:
-	@docker-compose run --rm serve flask dbu-no-sql
+	@docker exec -it elog_flap flask dbu-no-sql
 
 
 .PHONY: dd_sql
 # help: dd_sql				- to make a development migration downgrade, showing the sql
 dd_sql:
-	@docker-compose run --rm serve flask dd-sql
+	@docker exec -it elog_flap flask dd-sql
 
 
 .PHONY: dd_no_sql
 # help: dd_no_sql			- to make a development migration downgrade, not showing the sql
 dd_no_sql:
-	@docker-compose run --rm serve flask dd-no-sql
+	@docker exec -it elog_flap flask dd-no-sql
 
 
 .PHONY: dbc
 # help: dbc				- shows the current migration
 dbc:
-	@docker-compose run --rm serve flask dbc
+	@docker exec -it elog_flap flask dbc
+	@#docker-compose run --rm serve flask dbc
 
 
 .PHONY: updates
@@ -176,35 +177,35 @@ updates:
 .PHONY: key
 # help: key				- generates random secret key to sign the application. Keep it secure!
 key:
-	@docker-compose run --rm serve python -c 'import os; print(os.urandom(32))'
+	@docker exec -it elog_flap python -c 'import os; print(os.urandom(32))'
 
 
 .PHONY: auth
 # help: auth				- add a user with specified parameters to the DB. See Makefile for example(s)
 auth:
 	@# make auth u=ichux p=ichux
-	@docker-compose run --rm serve flask auth ${u} ${p}
+	@docker exec -it elog_flap flask auth ${u} ${p}
 
 
 .PHONY: usid
 # help: usid				- get the id of the specified user from the DB. See Makefile for example(s)
 usid:
 	@# make usid u=ichux
-	@docker-compose run --rm serve flask usid ${u}
+	@docker exec -it elog_flap flask usid ${u}
 
 
 .PHONY: access
 # help: access				- grants access to a user. See Makefile for example(s)
 access:
 	@# make access u=ichux ip=127.0.0.1
-	@docker-compose run --rm serve flask access ${u} ${ip} ${id}
+	@docker exec -it elog_flap flask access ${u} ${ip} ${id}
 
 
 .PHONY: details
 # help: details				- displays the details of a user
 details:
 	@# make details u=ichux
-	@docker-compose run --rm serve flask details ${u}
+	@docker exec -it elog_flap flask details ${u}
 
 
 .PHONY: config
