@@ -1,24 +1,25 @@
-name: Docker Image CI
+name: Runs 
 
-on: [push]
-
-#on:
-  #pull_request:
-  #push:
-    #branches: [master]
+on:
+  pull_request:
+  push:
+    branches: [master]
 
 jobs:
-
-  build:
-
+  lint_python:
     runs-on: ubuntu-latest
-    
-    script:
-    - cp .prime.env .env
-    
+
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9]
+
     steps:
-    - uses: actions/checkout@v1
-    - name: Build app container
-      run: docker-compose ps
-    - name: Ensure code is passing
-      run: make ci
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - run: cp .prime.env .env
+      - run: pip install -r requirements-dev.txt
+      - run: make ci
+
