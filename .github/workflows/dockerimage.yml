@@ -12,10 +12,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
+    script:
+    - cp .prime.env .env
+    
     steps:
     - uses: actions/checkout@v1
     - name: Build app container
-      run: cp .prime.env .env ; docker-compose ps
+      run: docker-compose ps
     - name: Ensure code is passing
       run: make ci
