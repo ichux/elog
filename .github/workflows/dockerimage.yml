@@ -16,6 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build app container
-      run: docker-compose ps
+      run: cp .prime.env .env ; docker-compose ps
     - name: Ensure code is passing
       run: make ci
