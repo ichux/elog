@@ -20,4 +20,4 @@ jobs:
       - run: make ci
 
       - name: "Power Up Docker"
-        run: docker-compose ps
+        run: docker-compose up --build -d && docker-compose ps
