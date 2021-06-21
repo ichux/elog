@@ -108,12 +108,6 @@ ipdoc:
 	@docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(id)
 
 
-.PHONY: psdoc
-# help: psdoc				- to run docker-compose ps
-psdoc:
-	@docker-compose ps
-
-
 .PHONY: routes
 # help: routes				- displays the application's routes
 routes:

@@ -1,12 +1,8 @@
-name: Runs 
-
-on:
-  pull_request:
-  push:
-    branches: [master]
+name: Docker Image CI
+on: [push]
 
 jobs:
-  lint_python:
+  code_checks:
     runs-on: ubuntu-latest
 
     strategy:
@@ -14,8 +10,8 @@ jobs:
         python-version: [3.8, 3.9]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
       
@@ -23,3 +19,5 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: make ci
 
+      - name: "Power Up Docker"
+        run: docker-compose up --build -d && docker-compose ps
