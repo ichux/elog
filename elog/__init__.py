@@ -205,16 +205,16 @@ def load_user(_id):
     return User.query.get(int(_id))
 
 
-import elog.commands  # noqa: F401 E402
-from elog.controllers.apiv1 import v1_api  # noqa: F401 E402
-from elog.controllers.auth import auth  # noqa: F401 E402
+from .controllers.apiv1 import v1_api  # noqa: F401 E402
+from .controllers.auth import auth  # noqa: F401 E402
 
 # Business Logic
-from elog.controllers.frontend import frontend  # noqa: F401 E402
+from .controllers.frontend import frontend  # noqa: F401 E402
 
 elap.register_blueprint(frontend)
 elap.register_blueprint(v1_api, url_prefix="/api/v1.0")
 elap.register_blueprint(auth, url_prefix="/auth")
 
-from elog import errorhandlers  # noqa: F401 E402
-from elog.models.profile import User, UserAccess  # noqa: F401 E402
+# These lines are essential. They need to be loaded in this location
+from . import commands, errorhandlers  # noqa: F401 E402
+from .models.profile import User, UserAccess  # noqa: F401 E402

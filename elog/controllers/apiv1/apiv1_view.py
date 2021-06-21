@@ -23,11 +23,11 @@ def error_log():
 
     confirm_ip = User.query.filter_by(ip_address=ip).first()
     if confirm_ip is None:
-        raise InvalidAuthentication("Unknown IP address: {}".format(ip))
+        raise InvalidAuthentication(f"Unknown IP address: {ip}")
 
     if not (external_app_id == confirm_ip.external_app_id):
         raise InvalidAuthentication(
-            "Unknown External APP ID: {}".format(external_app_id)
+            f"Unknown External APP ID: {external_app_id}"
         )
 
     result = {
