@@ -8,7 +8,7 @@ from elog import error_signal_sent
 from elog.controllers.apiv1 import v1_api
 from elog.errortraps import distinct_id
 from elog.helpers import InvalidAuthentication
-from elog.models.profile import User
+from elog.models.profile import UserAccess
 
 
 @v1_api.route("/elog", methods=["POST"])
@@ -19,38 +19,36 @@ def error_log():
     # result = extract_vars(request.form)
     # print('gotten: {}'.format(result))
 
-    ip = request.form.get("ip")
+    ip = request.json.get("ip")
 
-    confirm_ip = User.query.filter_by(ip_address=ip).first()
+    confirm_ip = UserAccess.query.filter_by(ip_address=ip).first()
     if confirm_ip is None:
         raise InvalidAuthentication(f"Unknown IP address: {ip}")
 
     if not (external_app_id == confirm_ip.external_app_id):
-        raise InvalidAuthentication(
-            f"Unknown External APP ID: {external_app_id}"
-        )
+        raise InvalidAuthentication(f"Unknown External APP ID: {external_app_id}")
 
     result = {
         "id": distinct_id(),
-        "ip": request.form.get("ip"),
-        "requestpath": request.form.get("requestpath"),
-        "httpmethod": request.form.get("httpmethod"),
-        "useragent": request.form.get("useragent"),
-        "userplatform": request.form.get("userplatform"),
-        "userbrowser": request.form.get("userbrowser"),
-        "userbrowserversion": request.form.get("userbrowserversion"),
-        "referrer": request.form.get("referrer"),
-        "requestargs": request.form.get("requestargs"),
-        "postvalues": request.form.get("postvalues"),
-        "errortype": request.form.get("errortype"),
-        "errormsg": request.form.get("errormsg"),
-        "when": request.form.get("when"),
-        "errortraceback": request.form.get("errortraceback"),
+        "ip": request.json.get("ip"),
+        "requestpath": request.json.get("requestpath"),
+        "httpmethod": request.json.get("httpmethod"),
+        "useragent": request.json.get("useragent"),
+        "userplatform": request.json.get("userplatform"),
+        "userbrowser": request.json.get("userbrowser"),
+        "userbrowserversion": request.json.get("userbrowserversion"),
+        "referrer": request.json.get("referrer"),
+        "requestargs": request.json.get("requestargs"),
+        "postvalues": request.json.get("postvalues"),
+        "errortype": request.json.get("errortype"),
+        "errormsg": request.json.get("errormsg"),
+        "when": request.json.get("when"),
+        "errortraceback": request.json.get("errortraceback"),
         # This is a NUMERIC field in Whoosh and without converting it to an int, it threw an error
-        "code": int(request.form.get("code")),
+        "code": int(request.json.get("code")),
         # this line is essential to be able to make the query "date:today" work!
         # it has to be converted back to the 'datetime.datetime' format
-        "date": datetime.strptime(request.form.get("date"), "%Y-%m-%d %H:%M:%S.%f"),
+        "date": datetime.strptime(request.json.get("date"), "%Y-%m-%dT%H:%M:%S"),
     }
 
     error_signal_sent.send(app, result=result, where="ELIX")

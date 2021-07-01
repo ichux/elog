@@ -15,6 +15,7 @@ python-dotenv
 pre-commit
 uwsgitop
 uwsgi
+uncurl
 
 # install all found in the file below
 -r requirements.txt
