@@ -1,3 +1,6 @@
+# specific files to be ignored while uploading this project
+# __author__ = "Chukwudi Nwachukwu - iChux"
+
 logsdir/
 __pycache__/
 data/

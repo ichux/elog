@@ -27,7 +27,7 @@ clean:
 freeze:
 	@pip freeze | egrep -i "requests|cryptography|wtforms|whoosh|flask-migrate|\
 	psycopg2-binary|uwsgitop|flask-login|flask-wtf|blinker|passlib|\
-	python-dotenv" > requirements.txt
+	python-dotenv|webtest" > requirements.txt
 
 
 .PHONY: livereload
@@ -198,10 +198,10 @@ usid:
 
 
 .PHONY: access
-# help: access				- grants access to a user. See Makefile for example(s)
+# help: access				- grants access to a user from an IP address. See Makefile for example(s)
 access:
 	@# make access u=ichux ip=127.0.0.1
-	@docker exec -it elog_flap flask access ${u} ${ip} ${id}
+	@docker exec -it elog_flap flask access ${u} ${ip}
 
 
 .PHONY: details
@@ -335,7 +335,7 @@ check-docs:
 .PHONY: serve-docs
 # help: serve-docs                     - serve project html documentation
 serve-docs:
-	@cd docs/build; python -m http.server --bind 127.0.0.1
+	@cd docs/build; python3 -m http.server --bind 127.0.0.1
 
 
 .PHONY: dist
@@ -362,3 +362,9 @@ pgsql_bash:
 	@echo 'psql "postgresql://postgres:bbaeelog2bdf@elogpg:5432" -c "SHOW data_directory;"'
 	@echo 'psql "postgresql://elog:bbaeelog2bdf@elogpg:5432/elog" -c "SHOW data_directory;"'
 	@docker exec -it elog_psql bash
+
+
+.PHONY: producedata
+# help: producedata                     - Produce random data to test the API of the application
+producedata:
+	printf "\033c" && sh apidata.sh

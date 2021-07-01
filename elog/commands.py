@@ -1,3 +1,4 @@
+import json
 import os
 import secrets
 import time
@@ -173,7 +174,15 @@ def details(username):
     if user:
         print("\n")
         for _ in user.known_access:
-            _.display()
+            print(
+                json.dumps(
+                    {
+                        "ip_address": _.ip_address,
+                        "external_app_id": _.external_app_id,
+                        "enabled": _.enabled,
+                    }
+                )
+            )
             print("\n")
     else:
         print(f"\nThe username `{username}` was not found!\n")
