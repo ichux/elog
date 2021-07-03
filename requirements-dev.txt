@@ -1,5 +1,4 @@
 black
-coverage
 codespell
 isort
 ipython
@@ -11,7 +10,6 @@ pylint
 sphinx
 twine
 wheel
-python-dotenv
 pre-commit
 uwsgitop
 uwsgi
