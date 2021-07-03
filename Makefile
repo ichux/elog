@@ -1,6 +1,9 @@
 FORMAT="\nID\t{{.ID}}\nIMAGE\t{{.Image}}\nCOMMAND\t{{.Command}}\nCREATED\t{{.RunningFor}}\nSTATUS\t\
 {{.Status}}\nPORTS\t{{.Ports}}\nNAMES\t{{.Names}}\n"
 
+ID_NAME="ID\t{{.ID}}\nNAMES\t{{.Names}}\n"
+ELOG_APP = docker exec -it elog_flap
+
 
 # Do not remove this block. It is used by the 'help' rule when
 # constructing the help output.
@@ -26,20 +29,20 @@ clean:
 # help: freeze				- freeze listed Python libraries
 freeze:
 	@pip freeze | egrep -i "requests|cryptography|wtforms|whoosh|flask-migrate|\
-	psycopg2-binary|uwsgitop|flask-login|flask-wtf|blinker|passlib|\
-	python-dotenv|webtest" > requirements.txt
+	psycopg2-binary|uwsgitop|flask-login|flask-wtf|blinker|passlib|webtest|\
+	python-dotenv|coverage|ua-parser" > requirements.txt
 
 
 .PHONY: livereload
 # help: livereload			- live reload uwsgi
 livereload:
-	@docker exec -it elog_flap touch wsgi.py
+	@$(ELOG_APP) touch wsgi.py
 
 
 .PHONY: bash
 # help: bash				- to make bash for the docker environment
 bash:
-	@docker exec -it elog_flap bash
+	@$(ELOG_APP) bash
 
 
 .PHONY: stats
@@ -54,9 +57,9 @@ logs:
 	@docker-compose logs  --timestamps --follow
 
 
-.PHONY: bde
-# help: bde				- to make build and then detach from the docker environment
-bde:
+.PHONY: build
+# help: build				- to make build and then detach from the docker environment
+build:
 	@docker-compose up --build -d; docker-compose ps  # ; docker-compose logs
 
 
@@ -70,14 +73,6 @@ stop:
 # help: cls				- to clear the screen
 cls:
 	@printf "\033c"  # clear the screen
-
-
-.PHONY: down
-# help: down				- to make the docker environment go down and clean itself up
-down:
-	@docker-compose down
-	@docker images; echo
-	@echo 'make rmi id="'
 
 
 .PHONY: rmi
@@ -100,6 +95,11 @@ dpa:
 	@docker-compose ps
 	@docker ps -a --format $(FORMAT)
 
+.PHONY: listids
+# help: listids				- list all container ids. You can substitute any of them to `make ipdoc id=CONTAINER_ID`
+listids:
+	@docker ps -a --format $(ID_NAME)
+
 
 .PHONY: ipdoc
 # help: ipdoc				- get the ip of a container. See Makefile for example(s)
@@ -111,61 +111,61 @@ ipdoc:
 .PHONY: routes
 # help: routes				- displays the application's routes
 routes:
-	@docker exec -it elog_flap flask routes
+	@$(ELOG_APP) flask routes
 
 
 .PHONY: shell
 # help: shell				- displays the application's shell
 shell:
-	@docker exec -it elog_flap flask shell
+	@$(ELOG_APP) flask shell
 
 
 .PHONY: dbi
 # help: dbi				- to make a development migration init
 dbi:
-	@docker exec -it elog_flap flask dbi
+	@$(ELOG_APP) flask dbi
 
 
 .PHONY: dbm
 # help: dbm				- to make a development migration migrate
 dbm:
-	@docker exec -it elog_flap flask dbm
+	@$(ELOG_APP) flask dbm
 
 
 .PHONY: dbr
 # help: dbr				- to make a development migration revision
 dbr:
-	@docker exec -it elog_flap flask dbr
+	@$(ELOG_APP) flask dbr
 
 
 .PHONY: dbu_sql
 # help: dbu_sql				- to make a development migration upgrade, showing the sql
 dbu_sql:
-	@docker exec -it elog_flap flask dbu-sql
+	@$(ELOG_APP) flask dbu-sql
 
 
 .PHONY: dbu_no_sql
 # help: dbu_no_sql			- to make a development migration upgrade, not showing the sql
 dbu_no_sql:
-	@docker exec -it elog_flap flask dbu-no-sql
+	@$(ELOG_APP) flask dbu-no-sql
 
 
 .PHONY: dd_sql
 # help: dd_sql				- to make a development migration downgrade, showing the sql
 dd_sql:
-	@docker exec -it elog_flap flask dd-sql
+	@$(ELOG_APP) flask dd-sql
 
 
 .PHONY: dd_no_sql
 # help: dd_no_sql			- to make a development migration downgrade, not showing the sql
 dd_no_sql:
-	@docker exec -it elog_flap flask dd-no-sql
+	@$(ELOG_APP) flask dd-no-sql
 
 
 .PHONY: dbc
 # help: dbc				- shows the current migration
 dbc:
-	@docker exec -it elog_flap flask dbc
+	@$(ELOG_APP) flask dbc
 	@#docker-compose run --rm serve flask dbc
 
 
@@ -179,7 +179,7 @@ updates:
 .PHONY: key
 # help: key				- generates random secret key to sign the application. Keep it secure!
 key:
-	@docker exec -it elog_flap python -c \
+	@$(ELOG_APP) python -c \
 	'import os, secrets; print(os.urandom(32)); print(secrets.token_hex(16))'
 
 
@@ -187,28 +187,28 @@ key:
 # help: auth				- add a user with specified parameters to the DB. See Makefile for example(s)
 auth:
 	@# make auth u=ichux p=ichux
-	@docker exec -it elog_flap flask auth ${u} ${p}
+	@$(ELOG_APP) flask auth ${u} ${p}
 
 
 .PHONY: usid
 # help: usid				- get the id of the specified user from the DB. See Makefile for example(s)
 usid:
 	@# make usid u=ichux
-	@docker exec -it elog_flap flask usid ${u}
+	@$(ELOG_APP) flask usid ${u}
 
 
 .PHONY: access
 # help: access				- grants access to a user from an IP address. See Makefile for example(s)
 access:
 	@# make access u=ichux ip=127.0.0.1
-	@docker exec -it elog_flap flask access ${u} ${ip}
+	@$(ELOG_APP) flask access ${u} ${ip}
 
 
 .PHONY: details
 # help: details				- displays the details of a user
 details:
 	@# make details u=ichux
-	@docker exec -it elog_flap flask details ${u}
+	@$(ELOG_APP) flask details ${u}
 
 
 .PHONY: config
@@ -238,33 +238,27 @@ typing:
 .PHONY: test
 # help: test                           - run tests
 test:
-	@python -m unittest discover -s tests  # pytest
+	@docker-compose run --rm serve python -m unittest discover -s tests
 
 
 .PHONY: cospell
 # help: cospell                          - performs codespell on it
 cospell:
-	@codespell . --skip=*.js,*.txt,*.css --ignore-words-list=eith,gae \
-		--skip=./.* --quiet-level=2
+	@codespell . --skip=*.js,*.txt,*.css,*.wpu \
+		--ignore-words-list=eith,gae --skip=./.* --quiet-level=2
 
 .PHONY: ci
 # help: ci			 	- these conditions have to pass before you can make a push
 ci: lint typing test cospell
 
 
-.PHONY: test-verbose
-# help: test-verbose                   - run tests [verbosely]
-test-verbose:
-	@python -m unittest discover -s tests -v
-
-
 .PHONY: coverage
 # help: coverage                       - perform test coverage checks
 coverage:
-	@coverage erase
-	@coverage run -m unittest discover -s tests -v
-	@coverage html
-	@coverage report
+	@$(ELOG_APP) coverage erase
+	@$(ELOG_APP) coverage run -m unittest discover -s tests -v
+	@$(ELOG_APP) coverage html
+	@$(ELOG_APP) coverage report
 	@# pytest --cov=elog
 
 
@@ -305,7 +299,7 @@ check-style: check-sort-imports check-format
 .PHONY: check-types
 # help: check-types                    - check type hint annotations
 check-types:
-	@mypy -p elog --ignore-missing-imports
+	@mypy -p elog tests --ignore-missing-imports
 
 
 .PHONY: check-lint
@@ -368,3 +362,8 @@ pgsql_bash:
 # help: producedata                     - Produce random data to test the API of the application
 producedata:
 	printf "\033c" && sh apidata.sh
+
+
+.PHONY: prepare
+# help: prepare                     	- Prepare the application for expected standard
+prepare: style ci

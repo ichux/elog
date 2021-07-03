@@ -6,8 +6,33 @@ import traceback
 from datetime import datetime
 
 from flask import request
+from ua_parser import user_agent_parser  # type: ignore
+from werkzeug.user_agent import UserAgent
+from werkzeug.utils import cached_property
 
 from .helpers import extract_vars
+
+
+class ParsedUserAgent(UserAgent):
+    @cached_property
+    def _details(self):
+        return user_agent_parser.Parse(self.string)
+
+    @property
+    def platform(self):
+        return self._details["os"]["family"]
+
+    @property
+    def browser(self):
+        return self._details["user_agent"]["family"]
+
+    @property
+    def version(self):
+        return ".".join(
+            part
+            for key in ("major", "minor", "patch")
+            if (part := self._details["user_agent"][key]) is not None
+        )
 
 
 def distinct_id(length=64):
@@ -84,15 +109,17 @@ def log_details(code, display=False):
     if display:
         traceback.print_exception(*sys.exc_info())
 
+    ua = request.headers.get("User-Agent", "")
+    parsed_ua = ParsedUserAgent(ua)
     return {
         "id": distinct_id(),
         "ip": str(get_real_ip()),
         "requestpath": request.path,
         "httpmethod": str(request.method),
-        "useragent": str(request.user_agent.string),
-        "userplatform": str(request.user_agent.platform),
-        "userbrowser": str(request.user_agent.browser),
-        "userbrowserversion": str(request.user_agent.version),
+        "useragent": ua,
+        "userplatform": parsed_ua.platform,
+        "userbrowser": parsed_ua.browser,
+        "userbrowserversion": parsed_ua.version,
         "referrer": str(request.referrer),
         # json.dumps(request.args, indent=1, sort_keys=True)
         "requestargs": json.dumps(request.args),  # request.args.to_dict()

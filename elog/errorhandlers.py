@@ -42,6 +42,7 @@ def error404(error):
     # print traceback.format_exc()
 
     result = errortraps.log_details(getattr(error, "code", None), display=DISPLAY)
+
     error_signal_sent.send(
         app, result=result, where="ELIX"
     )  # saves into the whoosh DB for analysis

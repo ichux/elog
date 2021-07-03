@@ -13,3 +13,5 @@ supervisord.pid
 supervisord.log
 
 .env
+.coverage
+docs/

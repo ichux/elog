@@ -13,7 +13,7 @@ class User(Base):
     password_hash = db.Column(db.String(128))  # type: ignore
 
     def set_password(self, password):
-        self.password_hash = pwd_context.encrypt(
+        self.password_hash = pwd_context.hash(
             password
         )  # uses sha512_crypt with a min round of 535000
 
