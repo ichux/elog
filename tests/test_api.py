@@ -20,7 +20,7 @@ class RESTRoutes(unittest.TestCase):
         self.username = "test1"
         self.password = "T35tW!thiChux"
         self.ip_address = "127.0.0.1"
-        self.data_url = "http://localhost:9030/data?draw=1&start=0&length=20"
+        self.data_url = "/data?draw=1&start=0&length=20"
 
     def test_create_user(self):
         user = User.query.filter_by(username=self.username).first()
