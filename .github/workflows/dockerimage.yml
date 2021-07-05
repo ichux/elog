@@ -16,10 +16,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       
       - run: cp .prime.env .env
-      - run: pip install -r requirements-dev.txt
+      - run: pip install -U pip setuptools wheel -r requirements-dev.txt
 
       - name: "Power Up Docker"
-        run: docker-compose up --build -d && docker-compose ps && sleep 5s
+        run: docker-compose up --build -d && docker-compose ps && sleep 8s
         
       - name: "Run lint typing test cospell"
         run: make ci
