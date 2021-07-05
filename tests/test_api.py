@@ -121,6 +121,8 @@ class RESTRoutes(unittest.TestCase):
             xhr=True,
         )
 
+        print(response)
+
         for each in response.json.get("data"):
             request_path = each.get("requestpath")
             if request_path == "/unknown-route":
