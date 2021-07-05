@@ -15,17 +15,23 @@ from elog.models.profile import UserAccess
 @csrf.exempt
 def error_log():
     external_app_id = request.headers.get("EXTERNAL-APP-ID")
+    flag = False
 
     # result = extract_vars(request.form)
     # print('gotten: {}'.format(result))
 
     ip = request.json.get("ip")
 
-    confirm_ip = UserAccess.query.filter_by(ip_address=ip).first()
+    confirm_ip = UserAccess.query.filter_by(ip_address=ip).all()
     if confirm_ip is None:
         raise InvalidAuthentication(f"Unknown IP address: {ip}")
 
-    if not (external_app_id == confirm_ip.external_app_id):
+    for each in confirm_ip:
+        if each.external_app_id == external_app_id:
+            flag = True
+            break
+
+    if not flag:
         raise InvalidAuthentication(f"Unknown External APP ID: {external_app_id}")
 
     result = {

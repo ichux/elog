@@ -3,9 +3,6 @@ from datetime import datetime
 from json import dumps, loads
 from pprint import pprint
 
-from psycopg2.extensions import adapt as sqlescape  # type: ignore
-from sqlalchemy.sql import compiler  # type: ignore
-
 from elog import db, elap  # type: ignore
 
 # CONSTANTS
@@ -192,16 +189,21 @@ def get_class(table_name):
 
 # noinspection PyArgumentList
 def compile_query(query):
-    dialect = query.session.bind.dialect
+    # from psycopg2.extensions import adapt as sqlescape  # type: ignore
+    # from sqlalchemy.sql import compiler  # type: ignore
 
-    comp = compiler.SQLCompiler(dialect, query.statement)
-    comp.compile()
+    # dialect = query.session.bind.dialect
 
-    enc = dialect.encoding
-    params = {}
-    for k, v in comp.params.iteritems():
-        if isinstance(v, str):
-            v = v.encode(enc)
-        params[k] = sqlescape(v)
+    # comp = compiler.SQLCompiler(dialect, query.statement)
+    # comp.compile()
 
-    return (comp.string.encode(enc) % params).decode(enc)
+    # enc = dialect.encoding
+    # params = {}
+    # for k, v in comp.params.iteritems():
+    # if isinstance(v, str):
+    # v = v.encode(enc)
+    # params[k] = sqlescape(v)
+
+    # return (comp.string.encode(enc) % params).decode(enc)
+
+    return query.statement.compile(compile_kwargs={"literal_binds": True})
