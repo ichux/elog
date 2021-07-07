@@ -26,8 +26,6 @@ subprocess.call(["flask", b"dbm"], stdout=pipe, stderr=subprocess.STDOUT)\n    \
 subprocess.call(["flask", b"dbu-no-sql"], stdout=pipe, stderr=subprocess.STDOUT)' \
 | /usr/bin/env python3
 
-
-
 if [ "$1" = 'supervisord' ]; then
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 fi
