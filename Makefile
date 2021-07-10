@@ -329,7 +329,7 @@ check-docs:
 .PHONY: serve-docs
 # help: serve-docs                     - serve project html documentation
 serve-docs:
-	@cd docs/build; python3 -m http.server --bind 127.0.0.1
+	@python3 -m http.server --directory docs/source/_static/coverage/ --bind 127.0.0.1 8939
 
 
 .PHONY: dist
