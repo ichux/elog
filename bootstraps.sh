@@ -1,4 +1,12 @@
+#!/bin/sh
 
+test -d libraries || mkdir -p libraries
+
+printf "This action OVERWRITES any existing .env file\n\nDo you wish to create them (y/n) as ? "
+read answer
+
+create_files(){
+cat > .env<< EOF
 # PostgreSQL details
 PGTZ=Africa/Lagos
 POSTGRES_DB=elog
@@ -11,7 +19,7 @@ SQLGUI_HOST_PORT=9020
 
 # Flask app details
 FLASK_ENV=development
-FLASK_SKIP_DOTENV=0
+FLASK_SKIP_DOTENV=1
 FLASK_APP=wsgi.py
 FLASK_DEBUG=1
 FLASK_RUN_HOST=0.0.0.0
@@ -25,3 +33,11 @@ POSTGRES_HOST=elogpg
 SERVER_HOST_PORT=9030
 DEV_SERVER_HOST_PORT=9040
 SUPERVISOR_HOST_PORT=9050
+EOF
+
+printf "\n===\n'.env' has been successfully created\n===\n\n"
+}
+
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+    create_files
+fi
