@@ -3,7 +3,12 @@
 test -d libraries || mkdir -p libraries
 
 printf "This action OVERWRITES any existing .env file\n\nDo you wish to create them (y/n) as ? "
-read answer
+
+if [ -z "$1" ]; then
+  read answer
+else
+  answer = $1
+fi
 
 create_files(){
 cat > .env<< EOF

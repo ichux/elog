@@ -29,7 +29,6 @@ remember to change it to taste where appropriate.
 
 Note: Step 5 will produce a Unique ID that will be added to headers of each request for the API to honour such!
 
-
 # To view app metrics or monitor it
 1. Activate your virtual environment (not inside the container)
 2. Type `make stats` or visit http://127.0.0.1:9030/stats
