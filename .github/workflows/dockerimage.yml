@@ -7,7 +7,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8, 3.9]
+        python-version: [3.8]
 
     steps:
       - uses: actions/checkout@v1
@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       
-      - run: cp .prime.env .env
+      - run: source bootstraps.sh
       - run: pip install -U pip setuptools wheel -r requirements-dev.txt
 
       - name: "Power Up Docker"
