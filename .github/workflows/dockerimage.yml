@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       
-      - run: source bootstraps.sh Y
+      - run: source gitci.sh
       - run: pip install -U pip setuptools wheel -r requirements-dev.txt
 
       - name: "Power Up Docker"
