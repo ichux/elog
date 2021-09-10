@@ -3,16 +3,17 @@
 Collect your error logs in any application. This is a Flask app and this *README.md* is still being updated.
 
 # Before you begin
-1. *cp .prime.env .env* then alter to taste, if need be.
+1. *source bootstraps.sh* then alter to taste, if need be.
 2. run `python3 -m venv .venv; pip install -U pip setuptools wheel` to create a local environment, different from Docker's own
 3. Activate the virtual environment you created in Step 2 above
-4. run `pip install -r requirements-dev.txt`
-5. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
+4. run `pip download --disable-pip-version-check --dest libraries --cache-dir libraries pip setuptools wheel -r requirements-dev.txt`
+5. run `pip install --disable-pip-version-check --no-index --cache-dir libraries --find-links libraries pip setuptools wheel -r requirements-dev.txt`
+6. If you encounter errors during the build of uwsgi, blinker, uwsgitop, pyperclip and wrapt, just overlook it.
+7. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
 
 # Note
 1. Ports are quoted here, e.g. 9030. Please note that if you have changed such quoted ports in your `.env` file,
 remember to change it to taste where appropriate.
-2. You are not to change the [.prime.env](.prime.env) file but you would have to create yours with `cp .prime.env .env`
 
 # How to use
 1. Type `make` and choose any command that shows afterwards
