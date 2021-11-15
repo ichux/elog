@@ -4,12 +4,9 @@ Collect your error logs in any application. This is a Flask app and this *README
 
 # Before you begin
 1. *source bootstraps.sh* then alter to taste, if need be.
-2. run `python3 -m venv .venv; pip install -U pip setuptools wheel` to create a local environment, different from Docker's own
-3. Activate the virtual environment you created in Step 2 above
-4. run `pip download --disable-pip-version-check --dest libraries --cache-dir libraries pip setuptools wheel -r requirements-dev.txt`
-5. run `pip install --disable-pip-version-check --no-index --cache-dir libraries --find-links libraries pip setuptools wheel -r requirements-dev.txt`
-6. If you encounter errors during the build of uwsgi, blinker, uwsgitop, pyperclip and wrapt, just overlook it.
-7. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
+2. `Make download` and `Make install` to download & install the necessary libraries.
+3. If you encounter errors during the build of uwsgi, blinker, uwsgitop, pyperclip and wrapt, just overlook it.
+4. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
 
 # Note
 1. Ports are quoted here, e.g. 9030. Please note that if you have changed such quoted ports in your `.env` file,

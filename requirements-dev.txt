@@ -1,3 +1,6 @@
+wheel
+pip
+setuptools
 black
 codespell
 isort
@@ -9,7 +12,6 @@ flake8
 pylint
 sphinx
 twine
-wheel
 pre-commit
 uwsgi
 uncurl

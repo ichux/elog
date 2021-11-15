@@ -52,15 +52,11 @@ stats:
 
 
 .PHONY: logs
-# help: logs				- to make logs for the docker environment show up
+# help: logs					- Run individual log of a container (see inside Makefile for sample)
 logs:
-	@docker-compose logs  --timestamps --follow
-
-
-.PHONY: build
-# help: build				- to make build and then detach from the docker environment
-build:
-	@docker-compose up --build -d; docker-compose ps  # ; docker-compose logs
+	@# make log c=monitaur-core_api-redis_1
+	@# docker-compose logs  --timestamps --follow
+	@$(if $(c),docker logs --timestamps --follow $(c),$(value LIST_CONTAINERS))
 
 
 .PHONY: stop
@@ -367,3 +363,58 @@ producedata:
 .PHONY: prepare
 # help: prepare                     	- Prepare the application for expected standard
 prepare: style ci
+
+
+.PHONY: download
+# help: download				- Download libraries
+download:
+	@$(value DOWNLOAD_LIBS)
+
+
+.PHONY: install
+# help: install					- Install libraries
+install:
+	@$(value INSTALL_LIBS)
+
+
+.PHONY: build
+# help: build				- to make build and then detach from the docker environment
+build:
+	@# docker pull library/adminer python:3.8.8-buster postgres:14
+
+	@# clean up libraries
+	@rm -rf libraries
+
+	@# copy over libraries
+	@cp -r ~/buildapps/elog-libraries/ libraries/
+
+	@# build the library
+	@docker-compose up --build -d; docker-compose ps
+
+	@# clean up libraries
+	@rm -rf libraries
+
+
+define LIST_CONTAINERS =
+docker ps | grep elog | awk '{ print $NF }'
+endef
+
+
+define DOWNLOAD_LIBS =
+# create missing directories and virtual env
+test -d ~/buildapps/elog-libraries || mkdir -p ~/buildapps/elog-libraries
+test -d ~/buildapps/elog-libraries/.venv/elog || python3 -m venv ~/buildapps/elog-libraries/.venv/elog
+
+. ~/buildapps/elog-libraries/.venv/elog/bin/activate && find . -type f -name 'requiremen*.txt' \
+	-exec bash -c 'FILE="$1"; echo -e "\n\n${FILE}"; pip download --dest=~/buildapps/elog-libraries\
+	--disable-pip-version-check --no-cache-dir -r "${FILE}" ' _ '{}' \;
+endef
+
+
+define INSTALL_LIBS =
+# activate the environment and download the library
+eval ". ~/buildapps/elog-libraries/.venv/elog/bin/activate" \
+	&& find . -type f -name 'requirement*.txt' \
+	-exec bash -c 'FILE="$1"; echo -e "\n\n${FILE}"; pip install --no-build-isolation --no-index --no-cache-dir \
+	--disable-pip-version-check --find-links=~/buildapps/elog-libraries -r "${FILE}"' _ '{}' \;
+endef

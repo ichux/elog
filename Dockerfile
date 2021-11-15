@@ -18,11 +18,10 @@ WORKDIR /var/www/
 
 COPY requirements.txt /var/www/requirements.txt
 
-RUN pip3.8 --trusted-host pypi.python.org install --disable-pip-version-check --upgrade \
-    pip setuptools wheel uwsgi
-RUN pip3.8 --trusted-host pypi.python.org install --no-cache-dir -r /var/www/requirements.txt
-
 COPY . .
+
+RUN pip install --no-index --no-cache-dir --disable-pip-version-check \
+  --find-links=./libraries -r ./requirements.txt setuptools wheel uwsgi
 
 EXPOSE 5000 9001
 

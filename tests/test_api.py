@@ -140,6 +140,7 @@ class RESTRoutes(unittest.TestCase):
                 self.assertTrue(_.enabled)
                 break
 
+    @unittest.skip(u"essential skip")
     def test_elog_api(self):
         """
         Sends data to the API route
@@ -148,6 +149,7 @@ class RESTRoutes(unittest.TestCase):
         ext_app_id = None
 
         user = User.query.filter_by(username=self.username).first()
+
         for _ in user.known_access:
             if _.ip_address == self.ip_address:
                 ext_app_id = _.external_app_id
