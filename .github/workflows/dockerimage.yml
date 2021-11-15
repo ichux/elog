@@ -18,8 +18,11 @@ jobs:
       - run: source gitci.sh
       - run: pip install -U pip setuptools wheel -r requirements-dev.txt
 
-      - name: "Power Up Docker"
-        run: docker-compose up --build -d && docker-compose ps && sleep 8s
+      - name: "download essential libraries"
+        run: make download
+
+      - name: "build the container"
+        run: make build
         
       - name: "Run lint typing test cospell"
         run: make ci
