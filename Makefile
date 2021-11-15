@@ -52,7 +52,7 @@ stats:
 
 
 .PHONY: logs
-# help: logs					- Run individual log of a container (see inside Makefile for sample)
+# help: logs				- Run individual log of a container (see inside Makefile for sample)
 logs:
 	@# make log c=monitaur-core_api-redis_1
 	@# docker-compose logs  --timestamps --follow
@@ -232,24 +232,24 @@ typing:
 
 
 .PHONY: test
-# help: test                           - run tests
+# help: test				- run tests
 test:
 	@docker-compose run --rm serve python -m unittest discover -s tests
 
 
 .PHONY: cospell
-# help: cospell                          - performs codespell on it
+# help: cospell				- performs codespell on it
 cospell:
 	@codespell . --skip=*.js,*.txt,*.css,*.wpu \
 		--ignore-words-list=eith,gae --skip=./.* --quiet-level=2
 
 .PHONY: ci
-# help: ci			 	- these conditions have to pass before you can make a push
+# help: ci				- these conditions have to pass before you can make a push
 ci: lint typing test cospell
 
 
 .PHONY: coverage
-# help: coverage                       - perform test coverage checks
+# help: coverage			- perform test coverage checks
 coverage:
 	@$(ELOG_APP) coverage erase
 	@$(ELOG_APP) coverage run -m unittest discover -s tests -v
@@ -259,95 +259,95 @@ coverage:
 
 
 .PHONY: format
-# help: format                         - perform code style format
+# help: format				- perform code style format
 format:
 	@black elog tests
 
 
 .PHONY: check-format
-# help: check-format                   - check code format compliance
+# help: check-format			- check code format compliance
 check-format:
 	@black --check elog tests
 
 
 .PHONY: sort-imports
-# help: sort-imports                   - apply import sort ordering
+# help: sort-imports			- apply import sort ordering
 sort-imports:
 	@isort . --profile black
 
 
 .PHONY: check-sort-imports
-# help: check-sort-imports             - checks imports are sorted
+# help: check-sort-imports		- checks imports are sorted
 check-sort-imports:
 	@isort . --check-only --profile black
 
 
 .PHONY: style
-# help: style                          - performs code style format
+# help: style				- performs code style format
 style: sort-imports format
 
 
 .PHONY: check-style
-# help: check-style                    - check code style compliance
+# help: check-style			- check code style compliance
 check-style: check-sort-imports check-format
 
 
 .PHONY: check-types
-# help: check-types                    - check type hint annotations
+# help: check-types			- check type hint annotations
 check-types:
 	@mypy -p elog tests --ignore-missing-imports
 
 
 .PHONY: check-lint
-# help: check-lint                     - run static analysis checks
+# help: check-lint			- run static analysis checks
 check-lint:
 	@pylint --rcfile=.pylintrc elog ./tests
 
 
 .PHONY: check-static-analysis
-# help: check-static-analysis          - check code style compliance
+# help: check-static-analysis		- check code style compliance
 check-static-analysis: check-lint check-types
 
 
 .PHONY: docs
-# help: docs                           - generate project documentation
+# help: docs				- generate project documentation
 docs: coverage
 	@cd docs; rm -rf source/api/elog*.rst source/api/modules.rst build/*
 	@cd docs; make html
 
 
 .PHONY: check-docs
-# help: check-docs                     - quick check docs consistency
+# help: check-docs			- quick check docs consistency
 check-docs:
 	@cd docs; make dummy
 
 
 .PHONY: serve-docs
-# help: serve-docs                     - serve project html documentation
+# help: serve-docs			- serve project html documentation
 serve-docs:
 	@python3 -m http.server --directory docs/source/_static/coverage/ --bind 127.0.0.1 8939
 
 
 .PHONY: dist
-# help: dist                           - create a wheel distribution package
+# help: dist				- create a wheel distribution package
 dist:
 	@python setup.py bdist_wheel
 
 
 .PHONY: dist-test
-# help: dist-test                      - test a wheel distribution package
+# help: dist-test			- test a wheel distribution package
 dist-test: dist
 	@cd dist && ../tests/test-dist.bash ./elog-*-py3-none-any.whl
 
 
 .PHONY: dist-upload
-# help: dist-upload                    - upload a wheel distribution package
+# help: dist-upload			- upload a wheel distribution package
 dist-upload:
 	@twine upload dist/elog-*-py3-none-any.whl
 
 
 .PHONY: pgsql_bash
-# help: pgsql_bash                     - PostgreSQL bash
+# help: pgsql_bash			- PostgreSQL bash
 pgsql_bash:
 	@echo 'psql "postgresql://postgres:bbaeelog2bdf@elogpg:5432" -c "SHOW data_directory;"'
 	@echo 'psql "postgresql://elog:bbaeelog2bdf@elogpg:5432/elog" -c "SHOW data_directory;"'
@@ -366,13 +366,13 @@ prepare: style ci
 
 
 .PHONY: download
-# help: download				- Download libraries
+# help: download			- Download libraries
 download:
 	@$(value DOWNLOAD_LIBS)
 
 
 .PHONY: install
-# help: install					- Install libraries
+# help: install				- Install libraries
 install:
 	@$(value INSTALL_LIBS)
 
