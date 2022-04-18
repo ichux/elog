@@ -28,9 +28,11 @@ clean:
 .PHONY: freeze
 # help: freeze				- freeze listed Python libraries
 freeze:
-	@pip freeze | egrep -i "requests|cryptography|wtforms|whoosh|flask-migrate|\
-	psycopg2-binary|uwsgitop|flask-login|flask-wtf|blinker|passlib|webtest|\
-	python-dotenv|coverage|ua-parser" > requirements.txt
+	@pip freeze | egrep -i "flask-login|flask-migrate|flask-sqlalchemy|flask-wtf|\
+	flask|jinja2|mako|markupsafe|sqlalchemy|wtforms|webtest|werkzeug|whoosh|\
+	alembic|blinker|certifi|cffi|chardet|coverage|cryptography|idna|itsdangerous\
+	|passlib|psycopg2-binary|pyopenssl|pycparser|python-dateutil|python-dotenv\
+	|python-editor|requests-toolbelt|requests|six|ua-parser|uwsgitop" > requirements.txt
 
 
 .PHONY: livereload
