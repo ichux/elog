@@ -4,9 +4,10 @@ Collect your error logs in any application. This is a Flask app and this *README
 
 # Before you begin
 1. *source bootstraps.sh* then alter to taste, if need be.
-2. `Make download` and `Make install` to download & install the necessary libraries.
+2. `make download` and `make install` to download & install the necessary libraries.
 3. If you encounter errors during the build of uwsgi, blinker, uwsgitop, pyperclip and wrapt, just overlook it.
-4. run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
+4. Install `pre-commit` on Mac with `brew install pre-commit` or on Linux with `sudo snap install pre-commit --classic`
+4. Run `pre-commit install` for you to be able to make use of *.pre-commit-config.yaml*
 
 # Note
 1. Ports are quoted here, e.g. 9030. Please note that if you have changed such quoted ports in your `.env` file,
@@ -37,7 +38,7 @@ Note: Step 5 will produce a Unique ID that will be added to headers of each requ
 2. run `flask run --host 0.0.0.0`
 
 # Bootstrap the application
-1. `make bde`
+1. `make build`
 2. `make routes` displays all the routes so that you can know which one to work with
 3. `docker-compose ps` helps you see the running apps and the ports they are serving on
 
