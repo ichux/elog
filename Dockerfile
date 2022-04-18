@@ -20,8 +20,10 @@ COPY requirements.txt /var/www/requirements.txt
 
 COPY . .
 
-RUN pip install --no-index --no-cache-dir --disable-pip-version-check \
-  --find-links=./libraries -r ./requirements.txt setuptools wheel uwsgi
+# RUN pip install --no-index --no-cache-dir --disable-pip-version-check \
+#   --find-links=./libraries -r ./requirements.txt setuptools wheel uwsgi
+
+RUN pip install -r ./requirements.txt setuptools wheel uwsgi
 
 EXPOSE 5000 9001
 

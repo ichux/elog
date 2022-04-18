@@ -56,7 +56,7 @@ stats:
 .PHONY: logs
 # help: logs				- Run individual log of a container (see inside Makefile for sample)
 logs:
-	@# make log c=monitaur-core_api-redis_1
+	@# make logs c=elog_flap
 	@# docker-compose logs  --timestamps --follow
 	@$(if $(c),docker logs --timestamps --follow $(c),$(value LIST_CONTAINERS))
 
@@ -385,13 +385,13 @@ build:
 	@# docker pull library/adminer python:3.8.8-buster postgres:14
 
 	@# clean up libraries
-	@rm -rf libraries
+	@#rm -rf libraries
 
 	@# copy over libraries
-	@cp -r ~/buildapps/elog-libraries/ libraries/
+	@#cp -r ~/buildapps/elog-libraries/ libraries/
 
 	@# build the library
-	@docker-compose up --build -d; docker-compose ps
+	@docker-compose up --build -d; docker-compose ps -a
 
 	@# clean up libraries
 	@rm -rf libraries
