@@ -352,6 +352,7 @@ dist-upload:
 # help: pgsql_bash			- PostgreSQL bash
 pgsql_bash:
 	@echo 'psql "postgresql://postgres:bbaeelog2bdf@elogpg:5432" -c "SHOW data_directory;"'
+	@echo 'psql "postgresql://postgres:bbaeelog2bdf@elogpg:5432" -c "SHOW config_file;"'
 	@echo 'psql "postgresql://elog:bbaeelog2bdf@elogpg:5432/elog" -c "SHOW data_directory;"'
 	@docker exec -it elog_psql bash
 
