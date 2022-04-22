@@ -24,39 +24,39 @@ Alpine.data("elog", () => ({
     this.csrf = meta?.content ?? "";
   },
   async loadData() {
-    // return new Promise((resolve, _) => {
-    //   resolve(
-    //     fakeData.data.map((record: any) => {
-    //       return [
-    //         record.id,
-    //         record.code,
-    //         record.httpmethod,
-    //         // record.errormsg,
-    //         // record.errortraceback,
-    //         record.errortype,
-    //         record.ip,
-    //         record.postvalues,
-    //         record.referrer,
-    //         record.requestargs,
-    //         record.requestpath,
-    //         record.useragent,
-    //         record.userbrowser,
-    //         record.userbrowserversion,
-    //         record.userplatform,
-    //         record.when,
-    //       ];
-    //     })
-    //   );
-    // });
-    const response = await fetch("/data", {
-      headers: {
-        "X-CSRFToken": this.csrf,
-        "Content-Type": "application/json;charset=UTF-8",
-      },
+    return new Promise((resolve, _) => {
+      resolve(
+        fakeData.data.map((record: any) => {
+          return [
+            record.id,
+            record.code,
+            record.httpmethod,
+            // record.errormsg,
+            // record.errortraceback,
+            record.errortype,
+            record.ip,
+            record.postvalues,
+            record.referrer,
+            record.requestargs,
+            record.requestpath,
+            record.useragent,
+            record.userbrowser,
+            record.userbrowserversion,
+            record.userplatform,
+            record.when,
+          ];
+        })
+      );
     });
-    if (response.ok) {
-      console.log(await response.json());
-    }
+    // const response = await fetch("/data", {
+    //   headers: {
+    //     "X-CSRFToken": this.csrf,
+    //     "Content-Type": "application/json;charset=UTF-8",
+    //   },
+    // });
+    // if (response.ok) {
+    //   console.log(await response.json());
+    // }
   },
   async init(): Promise<void> {
     this.initCsrf();
