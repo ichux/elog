@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    @apply p-0 m-0 outline-none;
+  }
+
+  #app {
+    @apply min-h-screen px-2 sm:px-3 md:px-3.5 lg:px-4;
+  }
+
+  button {
+    @apply px-3 py-2 text-sm font-medium text-white bg-slate-900;
+  }
+
+  input {
+  }
+}
+
+@layer components {
+  .search-input {
+    transition: 0.2s ease-in-out all;
+    @apply flex p-0.5 ml-2 border border-gray-400 hover:border-slate-600 hover:sm:min-w-[320px] focus-within:border-slate-600 focus-within:sm:min-w-[320px];
+  }
+
+  .search-input button {
+    @apply px-2 py-1.5 text-sm font-medium text-white bg-slate-900 text-[0.9rem];
+  }
+
+  .search-input input {
+    @apply pl-1 text-sm focus:outline-none focus:border-none grow;
+  }
+}

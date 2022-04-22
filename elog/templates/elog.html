@@ -1,251 +1,116 @@
+<!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Error Logs</title>
-    <meta name="description" content="The error logs"/>
-    <meta name="keywords" content="error,logs"/>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta http-equiv="Content-Language" content="en"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The error logs" />
+    <meta name="keywords" content="error,logs" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elog.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  </head>
+  <body>
+    <div id="app" x-data="elog">
+      <nav class="mb-16 border-b border-slate-300">
+        <div class="max-w-full">
+          <div class="flex items-center justify-between h-14">
+            <div class="flex">
+              <div class="flex items-center shrink-0">
+                <a
+                  href="/"
+                  class="p-2 font-bold text-gray-700 rounded hover:text-gray-600 hover:bg-gray-200"
+                  >Elog</a
+                >
+              </div>
+            </div>
+            <div class="ml-auto">
+              <!--Dropdown-->
+              <div
+                class="hidden cursor-pointer sm:flex sm:items-center sm:ml-6"
+              >
+                <div
+                  class="relative"
+                  x-data="{ open: false }"
+                  @click.outside="open = false"
+                  @close.stop="open = false"
+                >
+                  <div @click="open = !open">
+                    <div
+                      class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                    >
+                      <div
+                        x-html="`@<span class='font-semibold'>username</span>`"
+                      ></div>
+                      <div class="ml-1">
+                        <svg
+                          class="w-4 h-4 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    x-show="open"
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="absolute right-0 z-50 w-48 mt-2 shadow-lg rounded-md origin-top-right"
+                    @click="open = false"
+                  >
+                    <div
+                      class="py-1 bg-white rounded-md ring-1 ring-black ring-opacity-5"
+                    >
+                      <!-- Authentication -->
+                      <div>
+                        <a
+                          class="block px-4 py-2 text-sm text-gray-700 leading-5 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                          href="#"
+                          @click="logout()"
+                          >Logout</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <section id="actions" class="flex items-center justify-end h-14">
+        <el-dropdown text="Actions" actions="Copy as CSV,Delete"></el-dropdown>
+        <div class="ml-2"></div>
+        <el-dropdown
+          text="Filters"
+          actions="Lorem Ipsum, Lorem Ipsum, Lorem Ipsum"
+        ></el-dropdown>
+        <!-- Search Input -->
+        <div class="search-input">
+          <input type="search" />
+          <button>Search</button>
+        </div>
+      </section>
+      <section x-ref="tableWrapper"></section>
+    </div>
 
-
-    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}"/>
-    <link href="{{ url_for('static', filename='css/slidebars.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/jquery.dataTables.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/dataTables.tableTools.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/dataTables.colVis.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/dataTables.responsive.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/dataTables.scroller.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style-responsive.css') }}" rel="stylesheet">
-
-
-{#    <script type="text/javascript" language="javascript"#}
-{#            src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}">#}
-{#    </script>#}
-    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/slidebars.min.js') }}"></script>
-
-    <style type="text/css" class="init">
-        td.details-control {
-            background: url('{{ url_for("static", filename="img/details_open.png") }}') no-repeat center center;
-            cursor: pointer;
-        }
-        tr.shown td.details-control {
-            background: url('{{ url_for("static", filename="img/details_close.png") }}') no-repeat center center;
-        }
-    </style>
-
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dataTables.tableTools.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap-dataTable.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dataTables.colVis.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dataTables.scroller.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootbox.min.js') }}"></script>
-
-</head>
-
-<body>
-<div class="table-responsive">
-    <table id="elog" class="table colvis-data-table data-table">
-        <thead>
-        <tr>
-            <th></th>
-            <th>id</th>
-            <th>ip</th>
-            <th>errormsg</th>
-            <th>errortype</th>
-            <th>code</th>
-            <th>browser</th>
-            <th>browserversion</th>
-            <th>httpmethod</th>
-            <th>postvalues</th>
-            <th>referer</th>
-            <th>requestargs</th>
-            <th>requestpath</th>
-            <th>platform</th>
-            <th>when</th>
-            <th>useragent</th>
-            <th>action</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
-
-
-<script type="text/javascript">
-    {% include "back_check.html" %}
-    var tbl;
-
-    $(document).ready(function () {
-        tbl = $('#elog').DataTable({
-            dom: '<"tbl-head clearfix"C>,<"tbl-top clearfix"lfr>,t,<"tbl-footer clearfix"<"tbl-info pull-left"i><"tbl-pagin pull-right"p>>',
-            "serverSide": true,
-            "processing": true,
-            "lengthMenu": [[20, 40, 50, 100], [20, 40, 50, 100]],
-            "ajax": "{{ url_for('frontend.data') }}",
-            "columns": [{
-                "className": 'details-control',
-                "orderable": false,
-                "sortable": false,
-                "data": null,
-                "defaultContent": ''
-            },
-                {"data": "id", "sortable": false, "orderable": false},
-                {"data": "ip", "sortable": false, "orderable": false},
-                {"data": "errormsg", "sortable": false, "orderable": false},
-                {"data": "errortype", "sortable": false, "orderable": false},
-                {"data": "code", "sortable": false, "orderable": false},
-                {"data": "userbrowser", "sortable": false, "orderable": false},
-                {"data": "userbrowserversion", "sortable": false, "orderable": false},
-                {"data": "httpmethod", "sortable": false, "orderable": false},
-                {"data": "postvalues", "sortable": false, "orderable": false},
-                {"data": "referrer", "sortable": false, "orderable": false},
-                {"data": "requestargs", "sortable": false, "orderable": false},
-                {"data": "requestpath", "sortable": false, "orderable": false},
-                {"data": "userplatform", "sortable": false, "orderable": false},
-                {"data": "when", "sortable": false, "orderable": false},
-                {"data": "useragent", "sortable": false, "orderable": false},
-                {"data": "action", "sortable": false, "orderable": false, sClass: "text-center"}
-            ],
-            "columnDefs": [
-                {
-                    "targets": -1,
-                    "data": null,
-                    "defaultContent": "<input class=\"checker\" onchange=\"doCheck(this)\" type='checkbox'/>"
-                },
-                {
-                    "targets": -2,
-                    "visible": false
-                },
-                {
-                    "targets": -4,
-                    "visible": false
-                },
-                {
-                    "targets": -5,
-                    "visible": false
-                },
-                {
-                    "targets": -6,
-                    "visible": false
-                },
-                {
-                    "targets": -7,
-                    "visible": false
-                },
-                {
-                    "targets": -8,
-                    "visible": false
-                },
-                {
-                    "targets": -10,
-                    "visible": false
-                },
-                {
-                    "targets": -11,
-                    "visible": false
-                },
-                {
-                    "targets": -13,
-                    "visible": false
-                },
-                {
-                    "targets": -16,
-                    "visible": false
-                }
-            ]
-
-
-        });
-
-        var log_body = '#elog tbody';
-        $(log_body).on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = tbl.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-            }
-        });
-
-        var fix_button = '<button id="deleteBtn" class="btn btn-default">Delete </button>';
-        $(".tbl-top").append('<span class="col-lg-8">' + fix_button + '</span>');
-
-        $("#deleteBtn").on("click", function () {
-            var counter = 0, idArray = [];
-
-            $.each($("tbody tr:has('.checker')"), function (index, val) {
-                if ($(this).find(".checker").is(":checked")) {
-                    var rowData = tbl.row($(this)).data();
-                    idArray.push(rowData.id)
-                }
-            });
-
-            if (idArray.length > 0) {
-                var choose = ((idArray.length > 1) ? " records?" : " record?");
-                bootbox.confirm('<p align="center">' + "Delete " + idArray.length + choose + '</p>', function (result) {
-                    if (result) {
-                        doDelete(idArray);
-                    }
-                });
-            }
-        });
-    });
-
-
-    function doDelete(jsonData) {
-        var box = bootbox.alert('<p align="center">deleting...</p>');
-        var csrf_token = $('meta[name=csrf-token]').attr('content');
-
-        $.ajax({
-            url: "{{ url_for('frontend.elog_delete') }}",
-            type: "POST",
-            data: JSON.stringify({"ids": jsonData}),
-            dataType: "json",
-            contentType: 'application/json;charset=UTF-8',
-            cache: false,
-            beforeSend: function (xhr, settings) {
-                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrf_token)
-                }
-            },
-            complete: function () {
-            },
-            success: function (serverResp) {
-                box.modal('hide');
-
-                tbl.ajax.reload(null, false);
-                $("#deleteBtn").addClass("disabled");
-            },
-            error: function (jqXHR, status, error) {
-                box.modal('hide');
-                bootbox.alert('<p align="center">' + 'Error ' + jqXHR.status + ' was encountered!</p>');
-            }
-        })
-    }
-    function doCheck(mThis) {
-        var isAnyElemChecked = $(".checker").is(":checked");
-        if (isAnyElemChecked)
-            $("#deleteBtn").removeClass("disabled");
-        else
-            $("#deleteBtn").addClass("disabled");
-    }
-
-    function format(rowData) {
-        return '<div class="well well-lg">' + rowData.errortraceback + '</div>';
-    }
-
-</script>
-</body>
-
+    <script
+      type="module"
+      src="{{ url_for('static', filename='js/main.js') }}"
+    ></script>
+    <script
+      type="module"
+      src="{{ url_for('static', filename='js/elog.js') }}"
+    ></script>
+  </body>
 </html>
