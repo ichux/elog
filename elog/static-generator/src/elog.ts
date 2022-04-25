@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import { Grid } from "gridjs";
 import { RowSelection } from "gridjs/plugins/selection";
+import { LogRecord } from "./types";
 import fakeData from "./faker";
 import "./gridjs.css";
 
@@ -24,39 +25,57 @@ Alpine.data("elog", () => ({
     this.csrf = meta?.content ?? "";
   },
   async loadData() {
-    return new Promise((resolve, _) => {
-      resolve(
-        fakeData.data.map((record: any) => {
-          return [
-            record.id,
-            record.code,
-            record.httpmethod,
-            // record.errormsg,
-            // record.errortraceback,
-            record.errortype,
-            record.ip,
-            record.postvalues,
-            record.referrer,
-            record.requestargs,
-            record.requestpath,
-            record.useragent,
-            record.userbrowser,
-            record.userbrowserversion,
-            record.userplatform,
-            record.when,
-          ];
-        })
-      );
+    const response = await fetch("/data", {
+      headers: {
+        "X-CSRFToken": this.csrf,
+        "Content-Type": "application/json;charset=UTF-8",
+      },
     });
-    // const response = await fetch("/data", {
-    //   headers: {
-    //     "X-CSRFToken": this.csrf,
-    //     "Content-Type": "application/json;charset=UTF-8",
-    //   },
-    // });
-    // if (response.ok) {
-    //   console.log(await response.json());
-    // }
+    if (response.ok) {
+      const { data, recordsFiltered, recordsTotal } = await response.json();
+      console.log({ data, recordsTotal, recordsFiltered });
+      const transformedData = data.map(
+        ({
+          id,
+          code,
+          httpmethod,
+          errormsg,
+          errortraceback,
+          errortype,
+          ip,
+          postvalues,
+          referrer,
+          requestargs,
+          requestpath,
+          useragent,
+          userbrowser,
+          userbrowserversion,
+          userplatform,
+          when,
+        }: LogRecord) => [
+          id,
+          code,
+          httpmethod,
+          errormsg,
+          errortraceback,
+          errortype,
+          ip,
+          postvalues,
+          referrer,
+          requestargs,
+          requestpath,
+          useragent,
+          userbrowser,
+          userbrowserversion,
+          userplatform,
+          when,
+        ]
+      );
+      console.log(transformedData);
+      return transformedData;
+    } else {
+      throw Error("Data retrieving error");
+    }
   },
   async init(): Promise<void> {
     this.initCsrf();
@@ -76,8 +95,8 @@ Alpine.data("elog", () => ({
         { name: "Id", hidden: true },
         "Code",
         "HTTP Method",
-        // "Error message",
-        // "Error traceback",
+        "Error message",
+        "Error traceback",
         "Error type",
         "Ip",
         "Post values",
@@ -93,7 +112,7 @@ Alpine.data("elog", () => ({
       data: this.loadData.bind(this),
       pagination: {
         enabled: true,
-        limit: 5,
+        limit: 20,
         summary: false,
       },
     });

@@ -16,3 +16,4 @@ supervisord.log
 .coverage
 docs/
 libraries/
+.venv/

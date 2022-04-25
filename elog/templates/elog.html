@@ -1,5 +1,5 @@
 {# Macro Includes #}
-{% include './macros/dropdown.html' %}
+{% from './macros/dropdown.html' import dropdown %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -97,6 +97,8 @@
           text="Filters"
           actions="Lorem Ipsum, Lorem Ipsum, Lorem Ipsum"
         ></el-dropdown>
+        <div class="ml-2"></div>
+      {{ dropdown() }}
         <!-- Search Input -->
         <div class="search-input">
           <input type="search" />

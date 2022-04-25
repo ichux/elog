@@ -27,7 +27,7 @@ def data():
 
     # Datatable sends in -1 when 'All' is chosen from the interface, so,
     # a maximum of 200 results are pulled out from the Whoosh
-    length = 200 if request_args.get("length") < 0 else request_args.get("length")
+    length = 200 if request_args.get("length", -1) < 0 else request_args.get("length")
 
     result = data_tables_display(qs, start, length, "ELIX")
 

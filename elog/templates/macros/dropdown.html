@@ -1,18 +1,18 @@
-{% macro dropdown %}
+{% macro dropdown() %}
 <div
   class="relative min-w-content bg-slate-900"
   x-data="{ open: false }"
   @click.outside="open = false"
 >
-  <div class="h-full w-full" @click="open = !open">
+  <div class="w-full h-full" @click="open = !open">
     <button
       ?disabled="${this.disabled}"
-      class="h-full px-3 py-2 w-full flex items-center text-sm font-medium text-white hover:text-gray-300 hover:border-gray-200 focus:outline-none focus:text-gray-300 focus:border-gray-300 transition duration-150 ease-in-out"
+      class="flex items-center w-full h-full px-3 py-2 text-sm font-medium text-white hover:text-gray-300 hover:border-gray-200 focus:outline-none focus:text-gray-300 focus:border-gray-300 transition duration-150 ease-in-out"
     >
-      <span class="font-medium w-full h-full flex justify-center items-center"
+      <span class="flex items-center justify-center w-full h-full font-medium"
         >${this.text}</span
       >
-      <div class="ml-1 w-4 h-4">
+      <div class="w-4 h-4 ml-1">
         <svg
           class="w-4 h-4 fill-current"
           xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@
     x-transition:leave="transition ease-in duration-75"
     x-transition:leave-start="transform opacity-100 scale-100"
     x-transition:leave-end="transform opacity-0 scale-95"
-    class="absolute right-0 top-full z-50 w-48 mt-2 shadow-lg origin-top-right"
+    class="absolute right-0 z-50 w-48 mt-2 shadow-lg top-full origin-top-right"
     @click="open = false"
   >
   {# Items #}
