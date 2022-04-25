@@ -17,3 +17,21 @@ export type LogRecord = {
   when: string;
 };
 
+export type LogRecordTuple = [
+  number,
+  number,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string
+];

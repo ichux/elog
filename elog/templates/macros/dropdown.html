@@ -1,6 +1,6 @@
-{% macro dropdown() %}
+{% macro dropdown(text, actions) %}
 <div
-  class="relative min-w-content bg-slate-900"
+  class="relative m-2 min-w-content bg-slate-900"
   x-data="{ open: false }"
   @click.outside="open = false"
 >
@@ -10,7 +10,7 @@
       class="flex items-center w-full h-full px-3 py-2 text-sm font-medium text-white hover:text-gray-300 hover:border-gray-200 focus:outline-none focus:text-gray-300 focus:border-gray-300 transition duration-150 ease-in-out"
     >
       <span class="flex items-center justify-center w-full h-full font-medium"
-        >${this.text}</span
+        >{{ text }}</span
       >
       <div class="w-4 h-4 ml-1">
         <svg
@@ -38,17 +38,17 @@
     class="absolute right-0 z-50 w-48 mt-2 shadow-lg top-full origin-top-right"
     @click="open = false"
   >
-  {# Items #}
+  {% for (name, args) in actions.items() %}
     <div class="py-0.5 bg-white ring-1 ring-black ring-opacity-5">
       <div>
         <span
-          class="block px-3 py-2 text-sm text-gray-700 leading-5 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-          x-on:click="$dispatch('selection', {selection: '${action}'})"
-          >${action}</span
+          class="{{ args.classes }} block px-3 py-2 text-sm text-gray-700 leading-5 hover:bg-gray-200 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+          @click="{{- args.action  -}}"
+          >{{ name }}</span
         >
       </div>
     </div>
-  {# End Items #}
+  {% endfor %}
   </div>
 </div>
 {% endmacro %}

@@ -88,6 +88,7 @@ def unknown_useragent(error):
 # noinspection PyUnusedLocal,PyUnresolvedReferences
 @app.errorhandler(Exception)
 def unhandled_exception(error):
+    print(error)
     result = errortraps.log_details(500, display=DISPLAY)
 
     # whoosh_log.delay(result, 'ELIX')  # saves into the whoosh DB for analysis

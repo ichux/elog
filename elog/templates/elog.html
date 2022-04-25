@@ -1,5 +1,6 @@
 {# Macro Includes #}
 {% from './macros/dropdown.html' import dropdown %}
+{% from './macros/button.html' import button %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -91,18 +92,12 @@
         </div>
       </nav>
       <section id="actions" class="flex items-center justify-end h-14">
-        <el-dropdown text="Actions" actions="Copy as CSV,Delete"></el-dropdown>
-        <div class="ml-2"></div>
-        <el-dropdown
-          text="Filters"
-          actions="Lorem Ipsum, Lorem Ipsum, Lorem Ipsum"
-        ></el-dropdown>
-        <div class="ml-2"></div>
-      {{ dropdown() }}
+        {{ dropdown('Actions', {'Copy as CSV': {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500 text-white hover:bg-red-600 '}}) }}
+        {{ button('Options', 'showAvailableOptions') }}
         <!-- Search Input -->
         <div class="search-input">
           <input type="search" />
-          <button>Search</button>
+          <button class="hover:opacity-95">Search</button>
         </div>
       </section>
       <section x-ref="tableWrapper"></section>

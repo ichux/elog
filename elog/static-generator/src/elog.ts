@@ -1,13 +1,31 @@
 import Alpine from "alpinejs";
 import { Grid } from "gridjs";
 import { RowSelection } from "gridjs/plugins/selection";
-import { LogRecord } from "./types";
-import fakeData from "./faker";
+import { LogRecord, LogRecordTuple } from "./types";
 import "./gridjs.css";
 
 Alpine.data("elog", () => ({
+  data: [] as Array<LogRecordTuple>,
   csrf: "",
   grid: undefined as Grid | undefined,
+  async showAvailableOptions() {},
+  async copySelectionAsCSV() {
+    // At this moment, Firefox do not offer permission
+    // for clipboard so checking won't be uniform.
+    // Just breaking on any error here.
+    try {
+      const checkboxPlugin = this.grid.config.plugin.get('checkboxes')
+      // Returned object is normally a proxy so we get the target
+      const { rowIds } = JSON.parse(JSON.stringify(checkboxPlugin.props.store.state));
+      const records = this.data.filter((record: LogRecordTuple) => rowIds.includes(record[0]));
+      console.log(records)
+      await navigator.clipboard.writeText('Text value')
+    }
+    catch {
+      alert('An error occured while copying the text.')
+    }
+  },
+  async deleteSelection() {},
   updateSelectionState(state: any, previousState: any) {
     console.log("Update: ", state, previousState);
   },
@@ -32,8 +50,7 @@ Alpine.data("elog", () => ({
       },
     });
     if (response.ok) {
-      const { data, recordsFiltered, recordsTotal } = await response.json();
-      console.log({ data, recordsTotal, recordsFiltered });
+      const { data, /** recordsFiltered, recordsTotal **/ } = await response.json();
       const transformedData = data.map(
         ({
           id,
@@ -71,7 +88,7 @@ Alpine.data("elog", () => ({
           when,
         ]
       );
-      console.log(transformedData);
+      this.data = transformedData;
       return transformedData;
     } else {
       throw Error("Data retrieving error");
