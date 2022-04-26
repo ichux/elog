@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   build: {
+    sourcemap: false,
     outDir: "../static",
     emptyOutDir: true,
     rollupOptions: {
