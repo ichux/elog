@@ -85,6 +85,8 @@ input.gridjs-input:focus {
 .gridjs-pagination .gridjs-summary {
   float: left;
   margin-top: 5px;
+
+  @apply text-sm;
 }
 .gridjs-pagination .gridjs-pages {
   float: right;
@@ -269,7 +271,8 @@ th.gridjs-th:last-child {
   border: none;
 }
 .gridjs-tr-selected td {
-  background-color: #ebf5ff;
+  /* background-color: #ebf5ff; */
+  @apply bg-blue-200;
 }
 
 .gridjs-tr:last-child td {
@@ -376,4 +379,13 @@ th.gridjs-th:last-child {
 .gridjs-th[data-column-id="checkboxes"] {
   @apply max-w-[25px] border-r text-slate-900;
   /* border-right: 1px solid #909090; */
+}
+
+tbody .gridjs-tr {
+  cursor: pointer;
+
+}
+
+tbody tr.gridjs-tr:hover td {
+  @apply bg-blue-100;
 }

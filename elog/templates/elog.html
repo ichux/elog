@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elog.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   </head>
-  <body>
-    <div id="app" x-data="elog">
+  <body x-data="elog">
+    <div id="app">
       <nav class="mb-16 border-b border-slate-300">
         <div class="max-w-full">
           <div class="flex items-center justify-between h-14">
@@ -101,7 +101,7 @@
       </section>
       <section x-ref="tableWrapper"></section>
     </div>
-
+    {% include './includes/record_details.html' %}
     <script
       type="module"
       src="{{ url_for('static', filename='js/main.js') }}"

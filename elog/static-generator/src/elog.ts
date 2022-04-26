@@ -9,7 +9,9 @@ Alpine.data("elog", () => ({
   data: [] as Array<LogRecordTuple>,
   csrf: "",
   grid: undefined as Grid | undefined,
-  async showAvailableOptions() {},
+  showAvailableOptionsView: false,
+  showRecordDetailsView: false,
+  currentSelection: [] as any[],
   checkAll() {
     document
       .querySelectorAll("input.gridjs-checkbox")
@@ -132,7 +134,15 @@ Alpine.data("elog", () => ({
       this.grid.forceRender();
     }
   },
-  onGridReady() {},
+  async showDetails(...args: any[]) {
+  const { _cells: cells } = args[1]; // Retrive record fields
+  cells.shift(); // Remove the first column as it's for the checkbox
+  this.currentSelection = cells;
+  this.showRecordDetailsView = true;
+  },
+  onGridReady() {
+    this.grid.on('rowClick', this.showDetails.bind(this));
+  },
   initCsrf() {
     const meta: HTMLMetaElement | null = document.querySelector(
       "meta[name='csrf-token']"
