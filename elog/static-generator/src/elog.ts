@@ -129,15 +129,7 @@ Alpine.data("elog", () => ({
     });
 
     if (response.ok) {
-      console.log(await response.json());
-      // Update the table then
-      // This is a temporary solution as it will
-      // probably conflict with server side configurations
-      this.grid
-        .updateConfig({
-          data: this.data.filter((r: LogRecordTuple) => !rowIds.includes(r[0])),
-        })
-        .forceRender();
+      this.grid.forceRender();
     }
   },
   onGridReady() {},
@@ -244,7 +236,9 @@ Alpine.data("elog", () => ({
         server: {
           url: (prevUrl: string, page: number, limit: number) => {
             console.log(prevUrl, limit, page);
-            return `${prevUrl}?length=${limit}&start=${page * limit}`;
+            return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${
+              page * limit
+            }`;
           },
         },
       },
