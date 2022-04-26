@@ -135,13 +135,20 @@ Alpine.data("elog", () => ({
     }
   },
   async showDetails(...args: any[]) {
-  const { _cells: cells } = args[1]; // Retrive record fields
-  cells.shift(); // Remove the first column as it's for the checkbox
-  this.currentSelection = cells;
-  this.showRecordDetailsView = true;
+    const { _cells: cells } = args[1]; // Retrive record fields
+    cells.shift(); // Remove the first column as it's for the checkbox
+    this.currentSelection = cells;
+    this.showRecordDetailsView = true;
   },
   onGridReady() {
-    this.grid.on('rowClick', this.showDetails.bind(this));
+    // This attempt to prevent checkboxes click
+    // events to hit row and trigger undesired actions
+    document
+      .querySelectorAll("input.gridjs-checkbox")
+      .forEach((element: Element) => {
+        element.addEventListener("click", (e) => e.stopPropagation());
+      });
+    this.grid.on("rowClick", this.showDetails.bind(this));
   },
   initCsrf() {
     const meta: HTMLMetaElement | null = document.querySelector(
