@@ -91,7 +91,7 @@
         </div>
       </nav>
       <section id="actions" class="flex items-center justify-end h-14">
-        {{ dropdown('Actions', {'Copy as CSV': {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500 text-white hover:bg-red-600 '}}) }}
+        {{ dropdown('Actions', {'Select all': {'action': 'checkAll', 'classes': ''}, 'Unselect all': {'action': 'uncheckAll', 'classes': ''}, 'Toggle selection': {'action': 'toggleSelection', 'classes': ''}, 'Copy as CSV': {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500 text-white hover:bg-red-600 '}}) }}
         {{ button('Options', 'showAvailableOptions') }}
         <!-- Search Input -->
         <div class="search-input">

@@ -10,6 +10,33 @@ Alpine.data("elog", () => ({
   csrf: "",
   grid: undefined as Grid | undefined,
   async showAvailableOptions() {},
+  checkAll() {
+    document
+      .querySelectorAll("input.gridjs-checkbox")
+      .forEach((element: Element) => {
+        const checked = (element as HTMLInputElement).checked == true;
+        if (!checked) {
+          (element as HTMLElement).click();
+        }
+      });
+  },
+  uncheckAll() {
+    document
+      .querySelectorAll("input.gridjs-checkbox")
+      .forEach((element: Element) => {
+        const checked = (element as HTMLInputElement).checked == true;
+        if (checked) {
+          (element as HTMLElement).click();
+        }
+      });
+  },
+  toggleSelection() {
+    document
+      .querySelectorAll("input.gridjs-checkbox")
+      .forEach((element: Element) => {
+        (element as HTMLElement).click();
+      });
+  },
   async copySelectionAsCSV() {
     try {
       const fields = [
@@ -120,15 +147,16 @@ Alpine.data("elog", () => ({
     );
     this.csrf = meta?.content ?? "";
   },
-  async loadData() {
-    const response = await fetch("/data", {
+  async loadData(options: any) {
+    console.log(options);
+    const response = await fetch(options.url, {
       headers: {
         "X-CSRFToken": this.csrf,
         "Content-Type": "application/json;charset=UTF-8",
       },
     });
     if (response.ok) {
-      const { data /** recordsFiltered, recordsTotal **/ } =
+      const { data /** recordsFiltered **/, recordsTotal } =
         await response.json();
       const transformedData = data.map(
         ({
@@ -168,7 +196,7 @@ Alpine.data("elog", () => ({
         ]
       );
       this.data = transformedData;
-      return transformedData;
+      return { data: transformedData, total: recordsTotal };
     } else {
       throw Error("Data retrieving error");
     }
@@ -205,11 +233,20 @@ Alpine.data("elog", () => ({
         "User platform",
         "When",
       ],
-      data: this.loadData.bind(this),
+      // data: this.loadData.bind(this),
+      server: {
+        url: "/data",
+        data: this.loadData.bind(this),
+      },
       pagination: {
         enabled: true,
         limit: 20,
-        summary: false,
+        server: {
+          url: (prevUrl: string, page: number, limit: number) => {
+            console.log(prevUrl, limit, page);
+            return `${prevUrl}?length=${limit}&start=${page * limit}`;
+          },
+        },
       },
     });
     this.grid.on("ready", this.onGridReady.bind(this));
