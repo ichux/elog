@@ -1,5 +1,5 @@
-{% from './macros/dropdown.html' import dropdown %}
-{% from './macros/button.html' import button %}
+{% from './macros/dropdown.html' import dropdown %} {% from
+'./macros/button.html' import button %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -9,11 +9,17 @@
     <meta name="keywords" content="error,logs" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta http-equiv="Content-Language" content="en" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/elog.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/elog.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
   </head>
   <body x-data="elog">
-    <div id="app">
+    <div id="app" class="max-w-full">
       <nav class="mb-16 border-b border-slate-300">
         <div class="max-w-full">
           <div class="flex items-center justify-between h-14">
@@ -90,18 +96,24 @@
           </div>
         </div>
       </nav>
-      <section id="actions" class="flex items-center justify-end h-14">
-        {{ dropdown('Actions', {'Select all': {'action': 'checkAll', 'classes': ''}, 'Unselect all': {'action': 'uncheckAll', 'classes': ''}, 'Toggle selection': {'action': 'toggleSelection', 'classes': ''}, 'Copy as CSV': {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500 text-white hover:bg-red-600 '}}) }}
-        {{ button('Options', 'showAvailableOptions') }}
+      <section id="actions" class="flex items-center justify-start h-14">
         <!-- Search Input -->
-        <div class="search-input">
+        <div class="mr-auto search-input">
           <input type="search" />
           <button class="hover:opacity-95">Search</button>
         </div>
+        {{ dropdown('Actions', {'Select all': {'action': 'checkAll', 'classes': ''}, 'Unselect all': {'action': 'uncheckAll', 'classes': ''}, 'Toggle selection': {'action': 'toggleSelection', 'classes': ''}, 'Copy as CSV': {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500 text-white hover:bg-red-600 '
+        }}) }}
+        {{ button("Options", "showAvailableOptions") }}
       </section>
-      <section x-ref="tableWrapper"></section>
+      <section class="flex items-stretch max-w-full max-h-full">
+        <main
+          class="overflow-auto grow shrink basis-auto"
+          x-ref="tableWrapper"
+        ></main>
+        {% include './includes/record_details.html' %}
+      </section>
     </div>
-    {% include './includes/record_details.html' %}
     <script
       type="module"
       src="{{ url_for('static', filename='js/main.js') }}"

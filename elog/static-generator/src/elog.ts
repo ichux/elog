@@ -11,7 +11,7 @@ Alpine.data("elog", () => ({
   grid: undefined as Grid | undefined,
   showAvailableOptionsView: false,
   showRecordDetailsView: false,
-  currentSelection: [] as any[],
+  currentSelection: [] as [string, any][], // tuple
   checkAll() {
     document
       .querySelectorAll("input.gridjs-checkbox")
@@ -137,7 +137,24 @@ Alpine.data("elog", () => ({
   async showDetails(...args: any[]) {
     const { _cells: cells } = args[1]; // Retrive record fields
     cells.shift(); // Remove the first column as it's for the checkbox
-    this.currentSelection = cells;
+    this.currentSelection = [
+      ["Id", cells[0]?.data],
+      ["HTTP Method", cells[2]?.data],
+      ["Code", cells[1]?.data],
+      ["Error type", cells[5]?.data],
+      ["Error message", cells[3]?.data],
+      ["Error traceback", cells[4]?.data],
+      ["Referrer", cells[8]?.data],
+      ["Post values", cells[7]?.data],
+      ["Request args", cells[9]?.data],
+      ["Request path", cells[10]?.data],
+      ["Ip", cells[6]?.data],
+      ["User Agent", cells[11]?.data],
+      ["User browser", cells[12]?.data],
+      ["User browser version", cells[13]?.data],
+      ["User platform", cells[14]?.data],
+      ["When", cells[15]?.data],
+    ];
     this.showRecordDetailsView = true;
   },
   onGridReady() {
@@ -157,7 +174,6 @@ Alpine.data("elog", () => ({
     this.csrf = meta?.content ?? "";
   },
   async loadData(options: any) {
-    console.log(options);
     const response = await fetch(options.url, {
       headers: {
         "X-CSRFToken": this.csrf,
@@ -252,7 +268,7 @@ Alpine.data("elog", () => ({
         limit: 20,
         server: {
           url: (prevUrl: string, page: number, limit: number) => {
-            console.log(prevUrl, limit, page);
+            // Remove old query params before doing the stuff
             return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${
               page * limit
             }`;
@@ -271,6 +287,26 @@ Alpine.data("elog", () => ({
       JSON.stringify(checkboxPlugin.props.store.state)
     );
     return rowIds;
+  },
+  formatHtml(record: [string, any]) {
+    switch (record[0]) {
+      case "Error message":
+      case "Error traceback":
+      case "Error type":
+        return `<pre class="py-2"><code>${
+          new Option(record[1].replaceAll(/<br\/?>/g, "\n")).innerHTML
+        }</pre></code>`;
+      default:
+        return new Option(record[1]).innerHTML;
+    }
+  },
+  async copyToClipboard(text: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      return false;
+    }
   },
 }));
 
