@@ -22,6 +22,7 @@
   }
 
   input {
+    @apply px-2 py-1.5 border border-gray-300 focus:border-gray-500 focus:outline-none;
   }
 
   pre, code {
@@ -44,6 +45,6 @@
   }
 
   .search-input input {
-    @apply pl-1 text-sm focus:outline-none focus:border-none grow;
+    @apply pl-1 text-sm focus:outline-none focus:border-none grow border-none;
   }
 }

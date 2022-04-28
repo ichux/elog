@@ -91,24 +91,26 @@ Alpine.data("elog", () => ({
           userbrowserversion,
           userplatform,
           when,
-        ]: LogRecordTuple): object => ({
-          Id: id,
-          Code: code,
-          "HTTP Method": httpmethod,
-          "Error message": errormsg,
-          "Error traceback": errortraceback,
-          "Error type": errortype,
-          Ip: ip,
-          "Post values": postvalues,
-          Referrer: referrer,
-          "Request args": requestargs,
-          "Request path": requestpath,
-          "User Agent": useragent,
-          "User browser": userbrowser,
-          "User browser version": userbrowserversion,
-          "User platform": userplatform,
-          When: when,
-        })
+        ]: LogRecordTuple): object => {
+          return {
+            Id: id,
+            Code: (code as any).val, // Attached as property at line 247
+            "HTTP Method": httpmethod,
+            "Error message": errormsg,
+            "Error traceback": errortraceback,
+            "Error type": errortype,
+            Ip: ip,
+            "Post values": postvalues,
+            Referrer: referrer,
+            "Request args": requestargs,
+            "Request path": requestpath,
+            "User Agent": useragent,
+            "User browser": userbrowser,
+            "User browser version": userbrowserversion,
+            "User platform": userplatform,
+            When: when,
+          };
+        }
       );
       const csv = parse(records, {fields, eol: "\n"});
       await navigator.clipboard.writeText(csv);
@@ -142,7 +144,6 @@ Alpine.data("elog", () => ({
     const {currentTarget} = args[0];
     let data = decodeURIComponent(currentTarget.querySelector('td[data-column-id="code"] div[data-record]')?.getAttribute('data-record'));
     data = JSON.parse(data);
-    console.log(data);
     const {_id} = args[1];
     if (this.currentSelectionId === _id) {
       return;
@@ -218,7 +219,7 @@ Alpine.data("elog", () => ({
           userplatform,
           when,
         }: LogRecord) => {
-          const initialData: unknown[] = [
+          const initialData: any[] = [
             id,
             code,
             httpmethod,
@@ -241,6 +242,7 @@ Alpine.data("elog", () => ({
           // See https://stackoverflow.com/questions/8542746/store-json-object-in-data-attribute-in-html-jquery
           // for why encodeURIComponent.
           initialData[1] = html(`<div data-record="${encodeURIComponent(JSON.stringify(initialData))}">${code}</div>`, 'div')
+          initialData[1].val = code;
           return initialData;
         });
       this.data = transformedData;
@@ -265,7 +267,7 @@ Alpine.data("elog", () => ({
           },
         },
         {name: "Id", hidden: true},
-        {name: "Code"},
+        {name: "Code", },
         {name: "HTTP Method"},
         {name: "Error message", hidden: true},
         {name: "Error traceback", hidden: true},
@@ -330,6 +332,7 @@ Alpine.data("elog", () => ({
     );
   },
   updatePaginationConfig(value: number) {
+    this.uncheckAll();
     this.options.contentLength = value;
     this.grid.updateConfig({
       pagination: {
@@ -339,10 +342,11 @@ Alpine.data("elog", () => ({
       .forceRender();
   },
   updateTable() {
+    this.uncheckAll();
     this.grid.forceRender();
   },
   buildURL(prevUrl: string, page: number, limit: number) {
-  const searchParams = this.searchQuery.length > 0 ? `&search[value]=${this.searchQuery}` : "&search[value]=date:today"
+    const searchParams = this.searchQuery.length > 0 ? `&search[value]=${this.searchQuery}` : "&search[value]=date:today"
     // Remove old query params before doing the stuff
     return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${page * limit
       }${searchParams}`;

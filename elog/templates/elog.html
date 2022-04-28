@@ -20,8 +20,8 @@
     <section id="actions" class="flex items-center justify-start h-14">
       <!-- Search Input -->
       <form class="mr-auto search-input" @submit.prevent="updateTable">
-          <input type="search" x-model="searchQuery" />
-          <button class="hover:opacity-95" type="submit">Search</button>
+        <input type="search" x-model="searchQuery" />
+        <button class="hover:opacity-95" type="submit">Search</button>
       </form>
 
       {{ dropdown('Actions', {'Select all': {'action': 'checkAll', 'classes': ''}, 'Unselect all': {'action':
@@ -37,8 +37,8 @@
       {% include './includes/record_details.html' %}
     </section>
   </div>
-  <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
-  <script type="module" src="{{ url_for('static', filename='js/elog.js') }}"></script>
 </body>
+<script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/elog.js') }}"></script>
 
 </html>
