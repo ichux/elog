@@ -332,6 +332,15 @@ Alpine.data("elog", () => ({
       field as never
     );
   },
+  updatePaginationConfig(value: number) {
+    this.options.contentLength = value;
+    this.grid.updateConfig({
+    pagination: {
+      limit: value,
+    }
+    })
+    .forceRender();
+  }
 }));
 
 document.addEventListener("DOMContentLoaded", Alpine.start);
