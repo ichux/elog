@@ -9,6 +9,7 @@ Alpine.data("elog", () => ({
   data: [] as Array<LogRecordTuple>,
   csrf: "",
   grid: undefined as Grid | undefined,
+  innerModalHeight: "auto",
   showAvailableOptionsView: false,
   showRecordDetailsView: false,
   currentSelection: [] as [string, any][], // tuple
@@ -158,6 +159,10 @@ Alpine.data("elog", () => ({
     this.showRecordDetailsView = true;
   },
   onGridReady() {
+    this.innerModalHeight =
+      document.querySelector(".gridjs.gridjs-container")?.getBoundingClientRect().height ??
+      "auto";
+      console.log(this.innerModalHeight);
     // This attempt to prevent checkboxes click
     // events to hit row and trigger undesired actions
     document
@@ -293,9 +298,7 @@ Alpine.data("elog", () => ({
       case "Error message":
       case "Error traceback":
       case "Error type":
-        return `<pre class="py-2"><code>${
-          new Option(record[1].replaceAll(/<br\/?>/g, "\n")).innerHTML
-        }</pre></code>`;
+        return record[1].replaceAll(/<br\/?>/g, "\n");
       default:
         return new Option(record[1]).innerHTML;
     }
@@ -307,6 +310,11 @@ Alpine.data("elog", () => ({
     } catch {
       return false;
     }
+  },
+  isCode(field: string): boolean {
+    return ["Error message", "Error traceback", "Error type"].includes(
+      field as never
+    );
   },
 }));
 
