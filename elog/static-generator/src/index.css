@@ -5,8 +5,13 @@
 @layer base {
   * {
     box-sizing: border-box;
+    scrollbar-color: #414f61 #cdcddd;
+    scrollbar-width: thin;
+
     @apply p-0 m-0 outline-none;
   }
+
+
 
   #app {
     @apply min-h-screen px-2 sm:px-3 md:px-3.5 lg:px-4;

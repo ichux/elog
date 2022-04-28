@@ -14,7 +14,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.verify_password(form.password.data):
             login_user(user, remember=True)
-            return redirect(request.args.get("next") or url_for("frontend.index"))
+            return redirect(url_for("frontend.index"))
 
         form.username.errors.append("Invalid username or password")
     return render_template("auth/index.html", form=form)

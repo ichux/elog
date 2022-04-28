@@ -1,18 +1,20 @@
 import Alpine from "alpinejs";
-import { Grid } from "gridjs";
-import { RowSelection } from "gridjs/plugins/selection";
-import { LogRecord, LogRecordTuple } from "./types";
-import { parse } from "json2csv";
+import {Grid, html} from "gridjs";
+import {RowSelection} from "gridjs/plugins/selection";
+import {LogRecord, LogRecordTuple} from "./types";
+import {parse} from "json2csv";
 import "./gridjs.css";
 
 Alpine.data("elog", () => ({
+  options: {contentLength: 20},
   data: [] as Array<LogRecordTuple>,
   csrf: "",
   grid: undefined as Grid | undefined,
   innerModalHeight: "auto",
   showAvailableOptionsView: false,
   showRecordDetailsView: false,
-  currentSelection: [] as [string, any][], // tuple
+  currentSelection: [] as [string, any][],
+  currentSelectionId: '',
   checkAll() {
     document
       .querySelectorAll("input.gridjs-checkbox")
@@ -107,7 +109,7 @@ Alpine.data("elog", () => ({
           When: when,
         })
       );
-      const csv = parse(records, { fields, eol: "\n" });
+      const csv = parse(records, {fields, eol: "\n"});
       await navigator.clipboard.writeText(csv);
       alert("Copied! TODO: Use modals");
     } catch (e) {
@@ -128,33 +130,40 @@ Alpine.data("elog", () => ({
         "X-CSRFToken": this.csrf,
         "Content-Type": "application/json;charset=UTF-8",
       },
-      body: JSON.stringify({ ids: rowIds }),
+      body: JSON.stringify({ids: rowIds}),
     });
 
     if (response.ok) {
       this.grid.forceRender();
     }
   },
-  async showDetails(...args: any[]) {
-    const { _cells: cells } = args[1]; // Retrive record fields
-    cells.shift(); // Remove the first column as it's for the checkbox
+  showDetails(...args: any[]): void {
+    const {currentTarget} = args[0];
+    let data = decodeURIComponent(currentTarget.querySelector('td[data-column-id="code"] div[data-record]')?.getAttribute('data-record'));
+    data = JSON.parse(data);
+    console.log(data);
+    const {_id} = args[1];
+    if (this.currentSelectionId === _id) {
+      return;
+    }
+    this.currentSelectionId = _id;
     this.currentSelection = [
-      ["Id", cells[0]?.data],
-      ["HTTP Method", cells[2]?.data],
-      ["Code", cells[1]?.data],
-      ["Error type", cells[5]?.data],
-      ["Error message", cells[3]?.data],
-      ["Error traceback", cells[4]?.data],
-      ["Referrer", cells[8]?.data],
-      ["Post values", cells[7]?.data],
-      ["Request args", cells[9]?.data],
-      ["Request path", cells[10]?.data],
-      ["Ip", cells[6]?.data],
-      ["User Agent", cells[11]?.data],
-      ["User browser", cells[12]?.data],
-      ["User browser version", cells[13]?.data],
-      ["User platform", cells[14]?.data],
-      ["When", cells[15]?.data],
+      ["Id", data[0]],
+      ["HTTP Method", data[2]],
+      ["Code", data[1]],
+      ["Error type", data[5]],
+      ["Error message", data[3]],
+      ["Error traceback", data[4]],
+      ["Referrer", data[8]],
+      ["Post values", data[7]],
+      ["Request args", data[9]],
+      ["Request path", data[10]],
+      ["Ip", data[6]],
+      ["User Agent", data[11]],
+      ["User browser", data[12]],
+      ["User browser version", data[13]],
+      ["User platform", data[14]],
+      ["When", data[15]],
     ];
     this.showRecordDetailsView = true;
   },
@@ -162,7 +171,7 @@ Alpine.data("elog", () => ({
     this.innerModalHeight =
       document.querySelector(".gridjs.gridjs-container")?.getBoundingClientRect().height ??
       "auto";
-      console.log(this.innerModalHeight);
+
     // This attempt to prevent checkboxes click
     // events to hit row and trigger undesired actions
     document
@@ -170,6 +179,7 @@ Alpine.data("elog", () => ({
       .forEach((element: Element) => {
         element.addEventListener("click", (e) => e.stopPropagation());
       });
+
     this.grid.on("rowClick", this.showDetails.bind(this));
   },
   initCsrf() {
@@ -186,7 +196,7 @@ Alpine.data("elog", () => ({
       },
     });
     if (response.ok) {
-      const { data /** recordsFiltered **/, recordsTotal } =
+      const {data /** recordsFiltered **/, recordsTotal} =
         await response.json();
       const transformedData = data.map(
         ({
@@ -206,32 +216,39 @@ Alpine.data("elog", () => ({
           userbrowserversion,
           userplatform,
           when,
-        }: LogRecord) => [
-          id,
-          code,
-          httpmethod,
-          errormsg,
-          errortraceback,
-          errortype,
-          ip,
-          postvalues,
-          referrer,
-          requestargs,
-          requestpath,
-          useragent,
-          userbrowser,
-          userbrowserversion,
-          userplatform,
-          when,
-        ]
-      );
+        }: LogRecord) => {
+          const initialData: unknown[] = [
+            id,
+            code,
+            httpmethod,
+            errormsg,
+            errortraceback,
+            errortype,
+            ip,
+            postvalues,
+            referrer,
+            requestargs,
+            requestpath,
+            useragent,
+            userbrowser,
+            userbrowserversion,
+            userplatform,
+            when,
+          ]
+
+          // The goal is to save the whole data as an attribute for later access
+          // See https://stackoverflow.com/questions/8542746/store-json-object-in-data-attribute-in-html-jquery
+          // for why encodeURIComponent.
+          initialData[1] = html(`<div data-record="${encodeURIComponent(JSON.stringify(initialData))}">${code}</div>`, 'div')
+          return initialData;
+        });
       this.data = transformedData;
-      return { data: transformedData, total: recordsTotal };
+      return {data: transformedData, total: recordsTotal};
     } else {
       throw Error("Data retrieving error");
     }
   },
-  async init(): Promise<void> {
+  init(): void {
     this.initCsrf();
     this.grid = new Grid({
       columns: [
@@ -246,22 +263,22 @@ Alpine.data("elog", () => ({
             },
           },
         },
-        { name: "Id", hidden: true },
-        "Code",
-        "HTTP Method",
-        { name: "Error message", hidden: true },
-        { name: "Error traceback", hidden: true },
-        "Error type",
-        "Ip",
-        "Post values",
-        "Referrer",
-        "Request args",
-        "Request path",
-        "User Agent",
-        "User browser",
-        "User browser version",
-        "User platform",
-        "When",
+        {name: "Id", hidden: true},
+        {name: "Code"},
+        {name: "HTTP Method"},
+        {name: "Error message", hidden: true},
+        {name: "Error traceback", hidden: true},
+        {name: "Error type"},
+        {name: "Ip"},
+        {name: "Post values"},
+        {name: "Referrer"},
+        {name: "Request args"},
+        {name: "Request path"},
+        {name: "User Agent"},
+        {name: "User browser"},
+        {name: "User browser version"},
+        {name: "User platform"},
+        {name: "When"},
       ],
       // data: this.loadData.bind(this),
       server: {
@@ -270,35 +287,34 @@ Alpine.data("elog", () => ({
       },
       pagination: {
         enabled: true,
-        limit: 20,
+        limit: this.options.contentLength,
         server: {
           url: (prevUrl: string, page: number, limit: number) => {
             // Remove old query params before doing the stuff
-            return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${
-              page * limit
-            }`;
+            return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${page * limit
+              }`;
           },
         },
       },
     });
     this.grid.on("ready", this.onGridReady.bind(this));
-    this.grid.render(this.$refs["tableWrapper"]);
+    this.grid.render((this as any).$refs["tableWrapper"]);
   },
   /////// Helpers
   getSelectedRowIds() {
     const checkboxPlugin = this.grid.config.plugin.get("checkboxes");
     // Returned object is normally a proxy so we get the target
-    const { rowIds }: { rowIds: (string | number)[] } = JSON.parse(
+    const {rowIds}: {rowIds: (string | number)[]} = JSON.parse(
       JSON.stringify(checkboxPlugin.props.store.state)
     );
     return rowIds;
   },
-  formatHtml(record: [string, any]) {
+  formatHtml(record: [string, unknown]) {
     switch (record[0]) {
       case "Error message":
       case "Error traceback":
       case "Error type":
-        return record[1].replaceAll(/<br\/?>/g, "\n");
+        return (record[1] as any).replaceAll(/<br\/?>/g, "\n");
       default:
         return new Option(record[1]).innerHTML;
     }
