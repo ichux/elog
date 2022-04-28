@@ -19,6 +19,7 @@ def index():
 def data():
     request_args = prepare_arguments(request.args)
 
+    print(request_args.get("search[value]"))
     qs = request_args.get("search[value]") or "date:today"
 
     # this is a hack that ensure 1 comes in instead of the default

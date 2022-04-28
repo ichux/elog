@@ -11,6 +11,7 @@ Alpine.data("elog", () => ({
   csrf: "",
   grid: undefined as Grid | undefined,
   innerModalHeight: "auto",
+  searchQuery: '',
   showAvailableOptionsView: false,
   showRecordDetailsView: false,
   currentSelection: [] as [string, any][],
@@ -289,11 +290,7 @@ Alpine.data("elog", () => ({
         enabled: true,
         limit: this.options.contentLength,
         server: {
-          url: (prevUrl: string, page: number, limit: number) => {
-            // Remove old query params before doing the stuff
-            return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${page * limit
-              }`;
-          },
+          url: this.buildURL.bind(this),
         },
       },
     });
@@ -316,7 +313,7 @@ Alpine.data("elog", () => ({
       case "Error type":
         return (record[1] as any).replaceAll(/<br\/?>/g, "\n");
       default:
-        return new Option(record[1]).innerHTML;
+        return new Option(record[1] as any).innerHTML;
     }
   },
   async copyToClipboard(text: string): Promise<boolean> {
@@ -335,11 +332,20 @@ Alpine.data("elog", () => ({
   updatePaginationConfig(value: number) {
     this.options.contentLength = value;
     this.grid.updateConfig({
-    pagination: {
-      limit: value,
-    }
+      pagination: {
+        limit: value,
+      }
     })
-    .forceRender();
+      .forceRender();
+  },
+  updateTable() {
+    this.grid.forceRender();
+  },
+  buildURL(prevUrl: string, page: number, limit: number) {
+  const searchParams = this.searchQuery.length > 0 ? `&search[value]=${this.searchQuery}` : "&search[value]=date:today"
+    // Remove old query params before doing the stuff
+    return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${page * limit
+      }${searchParams}`;
   }
 }));
 

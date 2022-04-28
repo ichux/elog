@@ -2,51 +2,43 @@
 './macros/button.html' import button %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Error Logs</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="The error logs" />
-    <meta name="keywords" content="error,logs" />
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <meta http-equiv="Content-Language" content="en" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/elog.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/main.css') }}"
-    />
-  </head>
-  <body x-data="elog">
-    <div id="app" class="max-w-full">
-      {% include './includes/nav.html' %}
-      <section id="actions" class="flex items-center justify-start h-14">
-        <!-- Search Input -->
-        <div class="mr-auto search-input">
-          <input type="search" />
-          <button class="hover:opacity-95">Search</button>
-        </div>
-        {{ dropdown('Actions', {'Select all': {'action': 'checkAll', 'classes': ''}, 'Unselect all': {'action': 'uncheckAll', 'classes': ''}, 'Toggle selection': {'action': 'toggleSelection', 'classes': ''}, 'Copy as CSV': {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500 text-white hover:bg-red-600 '
-        }}) }}
-        {#  {{ button("Options", "showAvailableOptions") }} #}
-        {% include './includes/options.html' %}
-      </section>
-      <section class="flex items-stretch max-w-full max-h-full">
-        <main
-          class="overflow-auto grow shrink basis-auto"
-          x-ref="tableWrapper"
-        ></main>
-        {% include './includes/record_details.html' %}
-      </section>
-    </div>
-    <script
-      type="module"
-      src="{{ url_for('static', filename='js/main.js') }}"
-    ></script>
-    <script
-      type="module"
-      src="{{ url_for('static', filename='js/elog.js') }}"
-    ></script>
-  </body>
+
+<head>
+  <title>Error Logs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The error logs" />
+  <meta name="keywords" content="error,logs" />
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
+  <meta http-equiv="Content-Language" content="en" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/elog.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+</head>
+
+<body x-data="elog">
+  <div id="app" class="max-w-full">
+    {% include './includes/nav.html' %}
+    <section id="actions" class="flex items-center justify-start h-14">
+      <!-- Search Input -->
+      <form class="mr-auto search-input" @submit.prevent="updateTable">
+          <input type="search" x-model="searchQuery" />
+          <button class="hover:opacity-95" type="submit">Search</button>
+      </form>
+
+      {{ dropdown('Actions', {'Select all': {'action': 'checkAll', 'classes': ''}, 'Unselect all': {'action':
+      'uncheckAll', 'classes': ''}, 'Toggle selection': {'action': 'toggleSelection', 'classes': ''}, 'Copy as CSV':
+      {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500
+      text-white hover:bg-red-600 '
+      }}) }}
+      {% include './includes/options.html' %}
+
+    </section>
+    <section class="flex items-stretch max-w-full max-h-full">
+      <main class="overflow-auto grow shrink basis-auto" x-ref="tableWrapper"></main>
+      {% include './includes/record_details.html' %}
+    </section>
+  </div>
+  <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/elog.js') }}"></script>
+</body>
+
 </html>
