@@ -5,12 +5,12 @@ import {LogRecord, LogRecordTuple} from "./types";
 import {parse} from "json2csv";
 import "./gridjs.css";
 
-Alpine.data("elog", () => ({
+const elog = () => ({
   options: {contentLength: 20},
   data: [] as Array<LogRecordTuple>,
   csrf: "",
   grid: undefined as Grid | undefined,
-  innerModalHeight: "auto",
+  innerModalHeight: "auto" as number | "auto",
   searchQuery: '',
   showAvailableOptionsView: false,
   showRecordDetailsView: false,
@@ -20,7 +20,7 @@ Alpine.data("elog", () => ({
     document
       .querySelectorAll("input.gridjs-checkbox")
       .forEach((element: Element) => {
-        const checked = (element as HTMLInputElement).checked == true;
+        const checked = (element as HTMLInputElement).checked;
         if (!checked) {
           (element as HTMLElement).click();
         }
@@ -30,7 +30,7 @@ Alpine.data("elog", () => ({
     document
       .querySelectorAll("input.gridjs-checkbox")
       .forEach((element: Element) => {
-        const checked = (element as HTMLInputElement).checked == true;
+        const checked = (element as HTMLInputElement).checked;
         if (checked) {
           (element as HTMLElement).click();
         }
@@ -42,6 +42,43 @@ Alpine.data("elog", () => ({
       .forEach((element: Element) => {
         (element as HTMLElement).click();
       });
+  },
+  extractData([
+    id,
+    code,
+    httpmethod,
+    errormsg,
+    errortraceback,
+    errortype,
+    ip,
+    postvalues,
+    referrer,
+    requestargs,
+    requestpath,
+    useragent,
+    userbrowser,
+    userbrowserversion,
+    userplatform,
+    when,
+  ]: LogRecordTuple): object {
+    return {
+      Id: id,
+      Code: (code as any).val, // Attached as custom property as code is a VNode
+      "HTTP Method": httpmethod,
+      "Error message": errormsg,
+      "Error traceback": errortraceback,
+      "Error type": errortype,
+      Ip: ip,
+      "Post values": postvalues,
+      Referrer: referrer,
+      "Request args": requestargs,
+      "Request path": requestpath,
+      "User Agent": useragent,
+      "User browser": userbrowser,
+      "User browser version": userbrowserversion,
+      "User platform": userplatform,
+      When: when,
+    };
   },
   async copySelectionAsCSV() {
     try {
@@ -73,46 +110,8 @@ Alpine.data("elog", () => ({
       let records = this.data.filter((record: LogRecordTuple) =>
         rowIds.includes(record[0])
       );
-      records = records.map(
-        ([
-          id,
-          code,
-          httpmethod,
-          errormsg,
-          errortraceback,
-          errortype,
-          ip,
-          postvalues,
-          referrer,
-          requestargs,
-          requestpath,
-          useragent,
-          userbrowser,
-          userbrowserversion,
-          userplatform,
-          when,
-        ]: LogRecordTuple): object => {
-          return {
-            Id: id,
-            Code: (code as any).val, // Attached as property at line 247
-            "HTTP Method": httpmethod,
-            "Error message": errormsg,
-            "Error traceback": errortraceback,
-            "Error type": errortype,
-            Ip: ip,
-            "Post values": postvalues,
-            Referrer: referrer,
-            "Request args": requestargs,
-            "Request path": requestpath,
-            "User Agent": useragent,
-            "User browser": userbrowser,
-            "User browser version": userbrowserversion,
-            "User platform": userplatform,
-            When: when,
-          };
-        }
-      );
-      const csv = parse(records, {fields, eol: "\n"});
+      const extracted = records.map(this.extractData);
+      const csv = parse(extracted, {fields, eol: "\n"});
       await navigator.clipboard.writeText(csv);
       alert("Copied! TODO: Use modals");
     } catch (e) {
@@ -137,7 +136,7 @@ Alpine.data("elog", () => ({
     });
 
     if (response.ok) {
-      this.grid.forceRender();
+      this.grid?.forceRender();
     }
   },
   showDetails(...args: any[]): void {
@@ -182,7 +181,7 @@ Alpine.data("elog", () => ({
         element.addEventListener("click", (e) => e.stopPropagation());
       });
 
-    this.grid.on("rowClick", this.showDetails.bind(this));
+    this.grid?.on("rowClick", this.showDetails.bind(this));
   },
   initCsrf() {
     const meta: HTMLMetaElement | null = document.querySelector(
@@ -198,7 +197,7 @@ Alpine.data("elog", () => ({
       },
     });
     if (response.ok) {
-      const {data /** recordsFiltered **/, recordsTotal} =
+      const {data, recordsTotal} =
         await response.json();
       const transformedData = data.map(
         ({
@@ -301,10 +300,10 @@ Alpine.data("elog", () => ({
   },
   /////// Helpers
   getSelectedRowIds() {
-    const checkboxPlugin = this.grid.config.plugin.get("checkboxes");
+    const checkboxPlugin = this.grid?.config.plugin.get("checkboxes");
     // Returned object is normally a proxy so we get the target
     const {rowIds}: {rowIds: (string | number)[]} = JSON.parse(
-      JSON.stringify(checkboxPlugin.props.store.state)
+      JSON.stringify(checkboxPlugin?.props?.store.state)
     );
     return rowIds;
   },
@@ -334,16 +333,17 @@ Alpine.data("elog", () => ({
   updatePaginationConfig(value: number) {
     this.uncheckAll();
     this.options.contentLength = value;
-    this.grid.updateConfig({
+    this.grid?.updateConfig({
       pagination: {
+        enabled: true,
         limit: value,
-      }
+      },
     })
       .forceRender();
   },
   updateTable() {
     this.uncheckAll();
-    this.grid.forceRender();
+    this.grid?.forceRender();
   },
   buildURL(prevUrl: string, page: number, limit: number) {
     const searchParams = this.searchQuery.length > 0 ? `&search[value]=${this.searchQuery}` : "&search[value]=date:today"
@@ -351,6 +351,7 @@ Alpine.data("elog", () => ({
     return `${prevUrl.replace(/\?.*$/, "")}?length=${limit}&start=${page * limit
       }${searchParams}`;
   }
-}));
+});
 
+Alpine.data("elog", elog);
 document.addEventListener("DOMContentLoaded", Alpine.start);

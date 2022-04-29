@@ -77,7 +77,7 @@ class RESTRoutes(unittest.TestCase):
         )
 
         self.app.post(self.auth_url, data)
-        self.assertIn(b"errormsg", self.app.get("/").body)
+        self.assertNotIn(b"errormsg", self.app.get("/").body)
 
         self.app.get("/auth/logout")
         self.assertEqual(response.status_code, 200)

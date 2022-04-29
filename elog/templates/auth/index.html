@@ -2,87 +2,88 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <!--<link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />-->
-  <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}" />-->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
 
-  <title>Errors Log - Authentication</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Errors Log - Authentication</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body class="flex items-center justify-center min-h-screen text-slate-900">
-  <div class="w-4/12 border" x-data="auth">
+<div class="w-4/12 border sm:min-h-[480px]" x-data="auth">
     <div class="flex border-b cursor-pointer h-14">
-      <div @click="tab = 'login'"
-        :class="{'bg-slate-500 text-white': tab == 'login', 'flex': true, 'items-center': true, 'justify-center': true, 'grow': true}">
-        Login</div>
-      <div @click="tab = 'signup'"
-        :class="{'bg-slate-500 text-white': tab == 'signup', 'flex': true, 'items-center': true, 'justify-center': true, 'grow': true}">
-        Signup</div>
+        <div id="login-tab" @click="tab = 'login'"
+             :class="{'bg-slate-500 text-white': tab == 'login', 'flex': true, 'items-center': true, 'justify-center': true, 'grow': true}">
+            Login
+        </div>
+        <div id="signup-tab" @click="tab = 'signup'"
+             :class="{'bg-slate-500 text-white': tab == 'signup', 'flex': true, 'items-center': true, 'justify-center': true, 'grow': true}">
+            Signup
+        </div>
     </div>
     <div class="form p-2.5" x-show="tab == 'login'">
-      <h2 class="text-center mt-2.5">Welcome back !</h2>
+        <h2 class="text-center mt-2.5">Welcome back !</h2>
 
-      <form action="{{ url_for('auth.login') }}" method="post">
-        {{ form.csrf_token }}
+        <form action="{{ url_for('auth.login') }}" method="post">
+            {{ form.csrf_token }}
 
-        <label class="flex flex-col items-stretch justify-between flex-nowrap">
-          <span class="py-2.5 text-sm">Username</span>
-          {{ form.username(placeholder="Username") }}
-        </label>
-        <ul class="pl-2 text-red-700 list-disc py-2.5">
-          {% for message in form.username.errors %}
-          <li class="text-sm">{{ message }}</li>
-          {% endfor %}
-        </ul>
+            <label class="flex flex-col items-stretch justify-between flex-nowrap">
+                <span class="py-2.5 text-sm">Username</span>
+                {{ form.username(placeholder="Username") }}
+            </label>
+            <ul class="pl-2 text-red-700 list-disc py-2.5">
+                {% for message in form.username.errors %}
+                    <li class="text-sm">{{ message }}</li>
+                {% endfor %}
+            </ul>
 
 
-        <label class="flex flex-col items-stretch justify-between flex-nowrap">
-          <span class="py-2.5 text-sm">Password</span>
-          {{ form.password(placeholder="Password") }}
-        </label>
-        <ul class="pl-2 text-red-700 list-disc py-2.5">
-          {% for message in form.password.errors %}
-          <li class="text-sm">{{ message }}</li>
-          {% endfor %}
-        </ul>
-        <button>Login</button>
-      </form>
+            <label class="flex flex-col items-stretch justify-between flex-nowrap">
+                <span class="py-2.5 text-sm">Password</span>
+                {{ form.password(placeholder="Password") }}
+            </label>
+            <ul class="pl-2 text-red-700 list-disc py-2.5">
+                {% for message in form.password.errors %}
+                    <li class="text-sm">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <button>Login</button>
+            <a href="#" class="text-sm">Forgot Password</a>
+        </form>
 
     </div>
     <div class="form p-2.5" x-show="tab == 'signup'">
-      <h2 class="text-center mt-2.5">Welcome aboard !</h2>
-      <form action="{{ url_for('auth.login') }}" method="post">
-        {{ form.csrf_token }}
-        <label class="flex flex-col items-stretch justify-between flex-nowrap">
-          <span class="py-2.5 text-sm">Username</span>
-          <input type="text" placeholder="Username" />
-        </label>
-        <label class="flex flex-col items-stretch justify-between flex-nowrap">
-          <span class="py-2.5 text-sm">Email Address</span>
-          <input type="email" placeholder="Email Address" />
-        </label>
-        <label class="flex flex-col items-stretch justify-between flex-nowrap">
-          <span class="py-2.5 text-sm">Phone Number</span>
-          <input type="tel" placeholder="Phone Number" />
-        </label>
-        <label class="flex flex-col items-stretch justify-between flex-nowrap">
-          <span class="py-2.5 text-sm">Password</span>
-          <input type="password" placeholder="Password" />
-        </label>
-        <button class="mt-5">Register</button>
-      </form>
+        <h2 class="text-center mt-2.5">Welcome aboard !</h2>
+        <form action="{{ url_for('auth.login') }}" method="post">
+            {{ form.csrf_token }}
+            <label class="flex flex-col items-stretch justify-between flex-nowrap">
+                <span class="py-2.5 text-sm">Username</span>
+                <input type="text" placeholder="Username"/>
+            </label>
+            <label class="flex flex-col items-stretch justify-between flex-nowrap">
+                <span class="py-2.5 text-sm">Email Address</span>
+                <input type="email" placeholder="Email Address"/>
+            </label>
+            <label class="flex flex-col items-stretch justify-between flex-nowrap">
+                <span class="py-2.5 text-sm">Phone Number</span>
+                <input type="tel" placeholder="Phone Number"/>
+            </label>
+            <label class="flex flex-col items-stretch justify-between flex-nowrap">
+                <span class="py-2.5 text-sm">Password</span>
+                <input type="password" placeholder="Password"/>
+            </label>
+            <button class="mt-5">Register</button>
+        </form>
     </div>
     {# <div class="cta"><a href="#">Password forgotten?</a></div> #}
-  </div>
+</div>
 </body>
 <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
 <style>
-  is-active {
-    @apply bg-slate-300 text-white;
-  }
+    is-active {
+        @apply bg-slate-300 text-white;
+    }
 </style>
 
 </html>
