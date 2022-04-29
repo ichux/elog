@@ -80,4 +80,3 @@ var ct=Object.defineProperty,ut=Object.defineProperties;var pt=Object.getOwnProp
         </div>
       </div>
     `}};M([j()],P.prototype,"text",2);M([j()],P.prototype,"actions",2);M([j({type:Boolean})],P.prototype,"disabled",2);P=M([Ht("el-dropdown")],P);
-//# sourceMappingURL=main.js.map

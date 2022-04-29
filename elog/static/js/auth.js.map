@@ -1,1 +1,0 @@
-{"version":3,"file":"auth.js","sources":["../../static-generator/src/auth.ts"],"sourcesContent":["import Alpine from \"alpinejs\";\n\nAlpine.data('auth', () => ({\n  tab: 'login',\n}));\n\ndocument.addEventListener(\"DOMContentLoaded\", Alpine.start);\n"],"names":["Alpine"],"mappings":"qDAEAA,EAAO,KAAK,OAAQ,IAAO,EACzB,IAAK,OACP,EAAE,EAEF,SAAS,iBAAiB,mBAAoBA,EAAO,KAAK"}
