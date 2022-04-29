@@ -8,7 +8,7 @@
       </div>
       <div class="ml-auto">
         <!--Dropdown-->
-        <div class="hidden cursor-pointer sm:flex sm:items-center sm:ml-6">
+        <div id="logout-dropdown" class="hidden cursor-pointer sm:flex sm:items-center sm:ml-6">
           <div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
             <div @click="open = !open">
               <div

@@ -36,6 +36,13 @@ Note: Step 5 will produce a Unique ID that will be added to headers of each requ
 # To run the application for development
 1. type `make bash` to enter the container
 2. run `flask run --host 0.0.0.0`
+3. In case you don't want to use `docker`, see [DEVELOPMENT.md](DEVELOPMENT.md)
+
+[//]: # (TODO: Add command for integration test and document it)
+
+# Testing the application
+1. `make test` runs unit tests
+
 
 # Bootstrap the application
 1. `make build`
