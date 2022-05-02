@@ -1,6 +1,7 @@
 from secrets import token_hex
 from flask_testing import LiveServerTestCase  # type: ignore
 from seleniumbase import BaseCase  # type: ignore
+import requests  # type: ignore
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -8,7 +9,7 @@ load_dotenv()
 from elog import elap, db, User  # noqa: E402
 
 
-class TestAuthPage(BaseCase, LiveServerTestCase):
+class TestCorePage(BaseCase, LiveServerTestCase):
     def create_app(self):
         elap.config['TESTING'] = True
         elap.config['SECRET_KEY'] = token_hex(12)
@@ -17,24 +18,22 @@ class TestAuthPage(BaseCase, LiveServerTestCase):
         return elap
 
     def setUp(self, masterqa_mode=False):
-        super(TestAuthPage, self).setUp(BaseCase)
-        super(TestAuthPage, self).setUp(LiveServerTestCase)
+        super(TestCorePage, self).setUp(BaseCase)
+        super(TestCorePage, self).setUp(LiveServerTestCase)
         self.username = token_hex(6)
         self.pwd = token_hex(12)
         self.user = User(username=self.username)
         self.user.set_password(self.pwd)
         db.session.add(self.user)
         db.session.commit()
+        self.login()
+        self.trigger_error()
 
     def tearDown(self):
         db.session.query(User).filter(User.username == self.username).delete()
         db.session.commit()
 
-    def test_got_redirected_when_not_auth(self):
-        self.goto(self.get_server_url())
-        self.assertIn(f"{self.get_server_url()}/auth", self.get_current_url())
-
-    def test_valid_login(self):
+    def login(self):
         self.goto(f"{self.get_server_url()}/auth")
         self.input('input[placeholder="Username"]', self.username)
         self.input('input[placeholder="Password"]', self.pwd)
@@ -42,13 +41,21 @@ class TestAuthPage(BaseCase, LiveServerTestCase):
 
         self.assert_element('[x-data="elog"]')
 
-    def test_logout(self):
-        self.goto(f"{self.get_server_url()}/auth")
-        self.input('input[placeholder="Username"]', self.username)
-        self.input('input[placeholder="Password"]', self.pwd)
-        self.submit('form')
+    def trigger_error(self):
+        """This will trigger a 404 error to have at least one entry in the logs"""
+        requests.get(f"{self.get_server_url()}/favicon.ico")
 
-        self.click('div#logout-dropdown')
-        self.click('div#logout-dropdown a')
+    def test_records_shown(self):
+        self.goto(self.get_server_url())
+        self.wait(5)
+        self.reload()
+        self.assert_elements('table')
 
-        self.assertIn(f"{self.get_server_url()}/auth", self.get_current_url())
+    def test_record_details(self):
+        self.goto(self.get_server_url())
+        self.reload()
+        self.assert_element('tr.gridjs-tr')
+        row = self.get_element('tr.gridjs-tr')
+        print(row)
+        row.click()
+        self.wait(12)
