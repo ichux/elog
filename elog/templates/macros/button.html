@@ -1,0 +1,16 @@
+{% macro button(text, action, classes = '') %}
+<div
+  class="relative m-2 min-w-content bg-slate-900"
+  @click="{{- action -}}"
+>
+  <div class="w-full h-full" @click="open = !open">
+    <button
+      class="{{- classes -}}flex items-center w-full h-full px-3 py-2 text-sm font-medium text-white hover:text-gray-300 hover:border-gray-200 focus:outline-none focus:text-gray-300 focus:border-gray-300 transition duration-150 ease-in-out"
+    >
+      <span class="flex items-center justify-center w-full h-full font-medium"
+        >{{ text }}</span
+      >
+    </button>
+  </div>
+</div>
+{% endmacro %}

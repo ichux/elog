@@ -236,7 +236,7 @@ typing:
 .PHONY: test
 # help: test				- run tests
 test:
-	@docker-compose run --rm serve python -m unittest discover -s tests
+	@docker-compose run --rm serve python -m unittest discover -s tests/unit
 
 
 .PHONY: cospell

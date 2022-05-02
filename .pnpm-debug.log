@@ -1,0 +1,14 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 error pnpm": {
+    "code": "ERR_PNPM_NO_IMPORTER_MANIFEST_FOUND",
+    "err": {
+      "name": "pnpm",
+      "message": "No package.json (or package.yaml, or package.json5) was found in \"/home/kadoukpe/Code/python3/elog\".",
+      "code": "ERR_PNPM_NO_IMPORTER_MANIFEST_FOUND",
+      "stack": "pnpm: No package.json (or package.yaml, or package.json5) was found in \"/home/kadoukpe/Code/python3/elog\".\n    at readProjectManifest (/home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:19815:13)\n    at async Object.readProjectManifestOnly (/home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:19819:28)\n    at async readProjectManifestOnly (/home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:43735:24)\n    at async Object.handler (/home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:177973:24)\n    at async /home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:182249:21\n    at async run (/home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:182223:34)\n    at async runPnpm (/home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:182442:5)\n    at async /home/kadoukpe/.nvm/versions/node/v14.18.2/pnpm-global/5/node_modules/.pnpm/pnpm@6.32.7/node_modules/pnpm/dist/pnpm.cjs:182434:7"
+    }
+  }
+}
