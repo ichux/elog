@@ -1,4 +1,5 @@
 import Alpine from "alpinejs";
+import Notification from "./alert";
 import {Grid, html} from "gridjs";
 import {RowSelection} from "gridjs/plugins/selection";
 import {LogRecord, LogRecordTuple} from "./types";
@@ -103,7 +104,7 @@ const elog = () => ({
       const rowIds = this.getSelectedRowIds();
 
       if (rowIds.length == 0) {
-        alert("Nothing to copy! TODO: Modals");
+        Notification.warn.fire({text: 'Nothing to copy'});
         return;
       }
 
