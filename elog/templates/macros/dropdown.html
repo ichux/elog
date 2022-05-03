@@ -1,6 +1,6 @@
 {% macro dropdown(text, actions) %}
 <div
-  class="relative m-2 min-w-content bg-slate-900"
+  class="dropdown relative m-2 min-w-content bg-slate-900"
   x-data="{ open: false }"
   @click.outside="open = false"
 >
@@ -38,7 +38,7 @@
     @click="open = false"
   >
   {% for (name, args) in actions.items() %}
-    <div class="py-0.5 bg-white ring-1 ring-black ring-opacity-5">
+    <div id="{{ name | trim | lower | replace(' ', '-') }}" class="py-0.5 bg-white ring-1 ring-black ring-opacity-5">
       <div>
         <span
           class="{{ args.classes }} block px-3 py-2 text-sm text-gray-700 leading-5 hover:bg-gray-200 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out cursor-pointer"
