@@ -114,7 +114,7 @@ const elog = () => ({
       const extracted = records.map(this.extractData);
       const csv = parse(extracted, {fields, eol: "\n"});
       await navigator.clipboard.writeText(csv);
-      alert("Copied! TODO: Use modals");
+      Notification.success.fire({text: "Copied"});
     } catch (e) {
       console.log(e);
     }
@@ -123,7 +123,7 @@ const elog = () => ({
     const rowIds = this.getSelectedRowIds();
 
     if (rowIds.length == 0) {
-      alert("Nothing to delete! TODO: Modals");
+      Notification.warn.fire({text: "Nothing to delete"});
       return;
     }
 

@@ -4,7 +4,7 @@ import './alert.css'
 
 const commonOptions = {
     toast: true,
-    // timer: 3000,
+    timer: 3000,
     position: 'top-end',
     showConfirmButton: false,
     timerProgressBar: true,
@@ -17,7 +17,5 @@ const Notification = {
     success: Swal.mixin({...commonOptions, icon: 'success'}),
 
 };
-
-window.Notification = Notification
 
 export default Notification;

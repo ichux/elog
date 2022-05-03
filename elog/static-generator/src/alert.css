@@ -1,19 +1,17 @@
 .swal2-popup.swal2-toast {
+  @apply text-sm;
+}
+
+.swal2-popup.swal2-toast {
   box-sizing: border-box;
   grid-column: 1/4 !important;
   grid-row: 1/4 !important;
   grid-template-columns: 1fr 99fr 1fr;
-  justify-items: center;
-  align-items: center;
   padding: 0.25rem;
   overflow-y: hidden;
   background: #fff;
   box-shadow: 0 0 1px hsla(0deg, 0%, 0%, 0.075), 0 1px 2px hsla(0deg, 0%, 0%, 0.075), 1px 2px 4px hsla(0deg, 0%, 0%, 0.075), 1px 3px 8px hsla(0deg, 0%, 0%, 0.075), 2px 4px 16px hsla(0deg, 0%, 0%, 0.075);
   pointer-events: all;
-}
-
-.swal2-popup.swal2-toast > * {
-  place-self: center;
 }
 
 .swal2-popup.swal2-toast > * {
@@ -55,6 +53,7 @@
   padding: 0;
   font-size: 1em;
   text-align: initial;
+
 }
 .swal2-popup.swal2-toast .swal2-html-container:empty {
   padding: 0;
@@ -71,10 +70,10 @@
   grid-column: 1;
   grid-row: 1/99;
   align-self: center;
-  width: 2em;
-  min-width: 2em;
-  height: 2em;
-  margin: 0 0.5em 0 0;
+  width: 1.25rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  margin: 0 0.5em 0 0.35rem;
 }
 .swal2-popup.swal2-toast .swal2-icon .swal2-icon-content {
   display: flex;
