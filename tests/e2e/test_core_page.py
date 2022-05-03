@@ -5,6 +5,7 @@ import requests  # type: ignore
 from dotenv import load_dotenv
 from flask_testing import LiveServerTestCase  # type: ignore
 from seleniumbase import BaseCase  # type: ignore
+from selenium.common.exceptions import StaleElementReferenceException
 
 load_dotenv()
 
@@ -94,3 +95,13 @@ class TestCorePage(BaseCase, LiveServerTestCase):
     @pytest.mark.skip(reason="Find if there is a way to access clipboard content from Selenium")
     def test_copy_as_csv_action(self):
         ...
+
+    def test_delete_action(self):
+        self.goto(self.get_server_url())
+        self.reload()
+        checkbox = self.find_element('input[type="checkbox"]')
+        checkbox.click()
+        self.click('#actions .dropdown button')
+        self.click('#delete')
+        with pytest.raises(StaleElementReferenceException):
+            checkbox.click()
