@@ -9,6 +9,7 @@ specifiers:
   gridjs: ^5.0.2
   json2csv: ^5.0.7
   postcss: ^8.4.12
+  prettier: ^2.6.2
   sweetalert2: ^11.4.10
   tailwindcss: ^3.0.24
   typescript: ^4.5.4
@@ -26,6 +27,7 @@ devDependencies:
   '@types/node': 17.0.25
   autoprefixer: 10.4.4_postcss@8.4.12
   postcss: 8.4.12
+  prettier: 2.6.2
   tailwindcss: 3.0.24
   typescript: 4.6.3
   vite: 2.9.5
@@ -682,6 +684,12 @@ packages:
   /preact/10.7.1:
     resolution: {integrity: sha512-MufnRFz39aIhs9AMFisonjzTud1PK1bY+jcJLo6m2T9Uh8AqjD77w11eAAawmjUogoGOnipECq7e/1RClIKsxg==}
     dev: false
+
+  /prettier/2.6.2:
+    resolution: {integrity: sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
 
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}

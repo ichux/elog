@@ -1,20 +1,51 @@
-// @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2.js';
+import successIconHtml from './icons/success.svg?raw';
+import warnIconHtml from './icons/warning.svg?raw';
+import alertIconHtml from './icons/alert.svg?raw';
+import infoIconHtml from './icons/info.svg?raw';
 import './alert.css'
 
 const commonOptions = {
     toast: true,
-    timer: 3000,
-    position: 'top-end',
+    timer: 5500,
+    position: 'bottom-end',
     showConfirmButton: false,
+    showCloseButton: true,
     timerProgressBar: true,
+    customClass: {
+        timerProgressBar: 'popup-timer-progress-bar'
+    }
 }
 
 const Notification = {
-    warn: Swal.mixin({...commonOptions, icon: 'warning'}),
-    info: Swal.mixin({...commonOptions, icon: 'info'}),
-    alert: Swal.mixin({...commonOptions, icon: 'error'}),
-    success: Swal.mixin({...commonOptions, icon: 'success'}),
+    info: Swal.mixin({
+        ...commonOptions,
+        iconHtml: infoIconHtml,
+        customClass: {
+            popup: 'info-popup',
+        },
+    }),
+    alert: Swal.mixin({
+        ...commonOptions,
+        iconHtml: alertIconHtml,
+        customClass: {
+            popup: 'alert-popup',
+        },
+    }),
+    warn: Swal.mixin({
+        ...commonOptions,
+        iconHtml: warnIconHtml,
+        customClass: {
+            popup: 'warn-popup',
+        }
+    }),
+    success: Swal.mixin({
+        ...commonOptions,
+        iconHtml: successIconHtml,
+        customClass: {
+            popup: 'success-popup',
+        },
+    }),
 
 };
 

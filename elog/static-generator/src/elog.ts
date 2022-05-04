@@ -114,9 +114,9 @@ const elog = () => ({
       const extracted = records.map(this.extractData);
       const csv = parse(extracted, {fields, eol: "\n"});
       await navigator.clipboard.writeText(csv);
-      Notification.success.fire({text: "Copied"});
+      Notification.success.fire({text: `${extracted.length} records copied`});
     } catch (e) {
-      console.log(e);
+      Notification.alert.fire({text: 'An error occured :('});
     }
   },
   async deleteSelection() {
