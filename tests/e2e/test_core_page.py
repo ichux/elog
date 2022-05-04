@@ -94,9 +94,25 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         assert ([checkboxes[0].is_selected()], [c.is_selected() for c in checkboxes[1:]]) == (
             [False], [True for _ in range(len(checkboxes) - 1)])
 
-    @pytest.mark.skip(reason="Find if there is a way to access clipboard content from Selenium")
+    @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
     def test_copy_as_csv_action(self):
-        ...
+        self.goto(self.get_server_url())
+        self.reload()
+        checkbox = self.find_elements('input[type="checkbox"]')[0]
+        checkbox.click()
+        self.click('#actions .dropdown button')
+        self.click('#copy-as-csv')
+        self.assert_element('.success-popup')
+
+        # This attempt to access the nav clipboard from Javascript
+        # to here. It's async and as there no args, arguments[0] represents
+        # the callback created by Selenium for us.
+        # See
+        # https://stackoverflow.com/questions/28057338/understanding-execute-async-script-in-selenium#comment93818104_28066902
+        clipboard_content = self.execute_async_script(
+            'let c = await navigator.clipboard.readText(); arguments[0](c)')
+        print(clipboard_content)
+        self.wait(5)
 
     def test_delete_action(self):
         self.goto(self.get_server_url())
