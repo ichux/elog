@@ -14,11 +14,11 @@
         <span class="mx-4 text-sm font-medium text-slate-800">Record details</span>
     </div>
     <template x-for="info in currentSelection">
-        <div class="my-2">
-            <span class="mb-0.5" x-text="info[0]"></span>
+        <div class="info-box my-2">
+            <span class="info-box__title mb-0.5" x-text="info[0]"></span>
             <template x-if="isCode(info[0]) == false">
                 <div
-                        class="max-w-full overflow-auto text-slate-700 border border-slate-200 relative sm:min-h-[2.5rem] p-1.5 shadow-inner flex justify-start items-center">
+                        class="info-box__content max-w-full overflow-auto text-slate-700 border border-slate-200 relative sm:min-h-[2.5rem] p-1.5 shadow-inner flex justify-start items-center">
                     <div class="max-w-full info-box" x-text="formatHtml(info)"></div>
                     <svg
                             @click="copyToClipboard($el.closest('div').innerText ?? '') ? console.log('Great') : console.log('Error')"
@@ -43,7 +43,7 @@
             </template>
             <template x-if="isCode(info[0]) == true">
         <pre
-                class="text-slate-700 border border-slate-200 relative sm:min-h-[2.5rem] shadow-inner flex justify-start items-center">
+                class="info-box__content text-slate-700 border border-slate-200 relative sm:min-h-[2.5rem] shadow-inner flex justify-start items-center">
         <code class="max-w-full p-2.5 py-3.5" x-text="formatHtml(info)"></code>
 
         <svg

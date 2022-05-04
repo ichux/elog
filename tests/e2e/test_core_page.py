@@ -4,8 +4,8 @@ import pytest
 import requests  # type: ignore
 from dotenv import load_dotenv
 from flask_testing import LiveServerTestCase  # type: ignore
-from seleniumbase import BaseCase  # type: ignore
 from selenium.common.exceptions import StaleElementReferenceException
+from seleniumbase import BaseCase  # type: ignore
 
 load_dotenv()
 
@@ -53,16 +53,18 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.reload()
         self.assert_elements('table', 'tr.gridjs-tr', 'td.gridjs-td')
 
-    @pytest.mark.skip(reason="Not fully functional yet")
     def test_record_details(self):
         self.goto(self.get_server_url())
         self.reload()
-        self.assert_element('tr.gridjs-tr')
-        self.click('tr.gridjs-tr')
-        row = self.get_element('tr.gridjs-tr')
-        print(row)
-        row.click()
-        self.wait(12)
+        columns = self.find_elements('td')
+        columns[3].click()  # 14 fields with checkboxes first so the choice has to take them into account
+        records = [r.text for r in self.find_elements('.info-box__content')]
+        columns[17].click()
+        records2 = [r.text for r in self.find_elements('.info-box__content')]
+
+        self.assert_elements('aside#record_details', 'aside#record_details .info-box',
+                             'aside#record_details .info-box pre code')
+        assert records != records2
 
     def test_action_select_all(self):
         self.goto(self.get_server_url())

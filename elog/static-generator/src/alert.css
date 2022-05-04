@@ -1492,16 +1492,16 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 }
 
 .warn-popup {
-  background: /*#FDC800*/ rgba(50, 50, 50, 0.9) !important;
-  color: /*#050505*/ #fff !important;
+  background: rgba(50, 50, 50, 0.95) !important;
+  color: #fff !important;
 }
 
 .alert-popup {
-  background: rgba(189, 40, 40, 0.9) !important;
+  background: rgba(189, 40, 40, 0.95) !important;
   color: #fff !important;
 }
 
 .info-popup {
-  background: rgba(47, 80, 224, 0.9) !important;
+  background: rgba(47, 80, 224, 0.95) !important;
   color: #fff !important;
 }
