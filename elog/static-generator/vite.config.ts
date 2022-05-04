@@ -16,7 +16,7 @@ export default defineConfig({
       },
       output: {
         format: "es",
-        assetFileNames: "css/[name].css", // cause we only have css files as assets
+        assetFileNames: "css/[name].css", // because we only have css files as assets
         entryFileNames: "js/[name].js",
       },
     },
