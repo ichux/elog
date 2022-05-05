@@ -57,7 +57,7 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.goto(self.get_server_url())
         self.reload()
         columns = self.find_elements('td')
-        columns[3].click()  # 14 fields with checkboxes first so the choice has to take them into account
+        columns[3].click()  # 14 fields per row with checkboxes first so the choice has to take them into account
         records = [r.text for r in self.find_elements('.info-box__content')]
         columns[17].click()
         records2 = [r.text for r in self.find_elements('.info-box__content')]
@@ -87,14 +87,17 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.reload()
         checkboxes = self.find_elements('input[type="checkbox"]')
         checkboxes[0].click()
-        assert ([checkboxes[0].is_selected()], [c.is_selected() for c in checkboxes[1:]]) == (
-            [True], [False for _ in range(len(checkboxes) - 1)])
+
+        assert checkboxes[0].is_selected()
+        assert [c.is_selected() for c in checkboxes[1:]] == [False for _ in range(len(checkboxes) - 1)]
+
         self.click('#actions .dropdown button')
         self.click('#toggle-selection')
-        assert ([checkboxes[0].is_selected()], [c.is_selected() for c in checkboxes[1:]]) == (
-            [False], [True for _ in range(len(checkboxes) - 1)])
 
-    # @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
+        assert not checkboxes[0].is_selected()
+        assert [c.is_selected() for c in checkboxes[1:]] == [True for _ in range(len(checkboxes) - 1)]
+
+    @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
     def test_copy_as_csv_action(self):
         self.goto(self.get_server_url())
         self.reload()
@@ -109,6 +112,8 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         # the callback created by Selenium for us.
         # See
         # https://stackoverflow.com/questions/28057338/understanding-execute-async-script-in-selenium#comment93818104_28066902
+        # self.driver.execute_cdp('Browser.grantPermissions', origin=self.get_server_url(),
+        #                                 permissions=['clipboardReadWrite'])
         clipboard_content = self.execute_async_script(
             'let c = await navigator.clipboard.readText(); arguments[0](c)')
         print(clipboard_content)
@@ -123,3 +128,6 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.click('#delete')
         with pytest.raises(StaleElementReferenceException):
             checkbox.click()
+
+    def test_options(self):
+        ...
