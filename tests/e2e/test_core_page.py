@@ -94,7 +94,7 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         assert ([checkboxes[0].is_selected()], [c.is_selected() for c in checkboxes[1:]]) == (
             [False], [True for _ in range(len(checkboxes) - 1)])
 
-    @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
+    # @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
     def test_copy_as_csv_action(self):
         self.goto(self.get_server_url())
         self.reload()
