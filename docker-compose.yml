@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   elogpg:
-    image: postgres:14
+    image: postgres:14.2
     restart: always
     container_name: elog_psql
     environment:
