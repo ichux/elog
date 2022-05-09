@@ -1,13 +1,13 @@
 import Alpine from 'alpinejs';
-import {Grid, html} from 'gridjs';
-import {RowSelection} from 'gridjs/plugins/selection';
-import {parse} from 'json2csv';
-import {LogRecord, LogRecordTuple} from './types';
+import { Grid, html } from 'gridjs';
+import { RowSelection } from 'gridjs/plugins/selection';
+import { parse } from 'json2csv';
+import { LogRecord, LogRecordTuple } from './types';
 import Notification from './alert';
 import './gridjs.css';
 
 const elog = () => ({
-  options: {contentLength: 20},
+  options: { contentLength: 20 },
   data: [] as Array<LogRecordTuple>,
   csrf: '',
   grid: undefined as Grid | undefined,
@@ -21,7 +21,7 @@ const elog = () => ({
     document
       .querySelectorAll('input.gridjs-checkbox')
       .forEach((element: Element) => {
-        const {checked} = element as HTMLInputElement;
+        const { checked } = element as HTMLInputElement;
         if (!checked) {
           (element as HTMLElement).click();
         }
@@ -31,7 +31,7 @@ const elog = () => ({
     document
       .querySelectorAll('input.gridjs-checkbox')
       .forEach((element: Element) => {
-        const {checked} = element as HTMLInputElement;
+        const { checked } = element as HTMLInputElement;
         if (checked) {
           (element as HTMLElement).click();
         }
@@ -45,23 +45,23 @@ const elog = () => ({
       });
   },
   extractData([
-                id,
-                code,
-                httpmethod,
-                errormsg,
-                errortraceback,
-                errortype,
-                ip,
-                postvalues,
-                referrer,
-                requestargs,
-                requestpath,
-                useragent,
-                userbrowser,
-                userbrowserversion,
-                userplatform,
-                when,
-              ]: LogRecordTuple): object {
+    id,
+    code,
+    httpmethod,
+    errormsg,
+    errortraceback,
+    errortype,
+    ip,
+    postvalues,
+    referrer,
+    requestargs,
+    requestpath,
+    useragent,
+    userbrowser,
+    userbrowserversion,
+    userplatform,
+    when,
+  ]: LogRecordTuple): object {
     return {
       Id: id,
       Code: (code as any).val, // Attached as custom property as code is a VNode
@@ -104,7 +104,7 @@ const elog = () => ({
       const rowIds = this.getSelectedRowIds();
 
       if (rowIds.length === 0) {
-        Notification.warn.fire({text: 'Nothing to copy'});
+        Notification.warn.fire({ text: 'Nothing to copy' });
         return;
       }
 
@@ -112,21 +112,21 @@ const elog = () => ({
         rowIds.includes(record[0])
       );
       const extracted = records.map(this.extractData);
-      const csv = parse(extracted, {fields, eol: '\n'});
+      const csv = parse(extracted, { fields, eol: '\n' });
       await navigator.clipboard.writeText(csv);
       const total = extracted.length;
       Notification.success.fire({
         text: `${total} record${total > 1 ? 's' : ''} copied`,
       });
     } catch (e) {
-      Notification.alert.fire({text: 'An error occured :('});
+      Notification.alert.fire({ text: 'An error occured :(' });
     }
   },
   async deleteSelection() {
     const rowIds = this.getSelectedRowIds();
 
     if (rowIds.length === 0) {
-      Notification.warn.fire({text: 'Nothing to delete'});
+      Notification.warn.fire({ text: 'Nothing to delete' });
       return;
     }
 
@@ -136,25 +136,27 @@ const elog = () => ({
         'X-CSRFToken': this.csrf,
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: JSON.stringify({ids: rowIds}),
+      body: JSON.stringify({ ids: rowIds }),
     });
 
     if (response.ok) {
-      Notification.success.fire(`${rowIds.length} record${rowIds.length > 1 ? 's' : ''} deleted`);
+      Notification.success.fire(
+        `${rowIds.length} record${rowIds.length > 1 ? 's' : ''} deleted`
+      );
       this.flushSelectionStore();
     } else {
       Notification.alert.fire('An error occured :(');
     }
   },
   showDetails(...args: any[]): void {
-    const {currentTarget} = args[0];
+    const { currentTarget } = args[0];
     let data = decodeURIComponent(
       currentTarget
         .querySelector('td[data-column-id="code"] div[data-record]')
         ?.getAttribute('data-record')
     );
     data = JSON.parse(data);
-    const {_id} = args[1];
+    const { _id } = args[1];
     if (this.currentSelectionId === _id) {
       return;
     }
@@ -209,26 +211,26 @@ const elog = () => ({
       },
     });
     if (response.ok) {
-      const {data, recordsTotal} = await response.json();
+      const { data, /* cordsTotal, */ recordsFiltered } = await response.json();
       const transformedData = data.map(
         ({
-           id,
-           code,
-           httpmethod,
-           errormsg,
-           errortraceback,
-           errortype,
-           ip,
-           postvalues,
-           referrer,
-           requestargs,
-           requestpath,
-           useragent,
-           userbrowser,
-           userbrowserversion,
-           userplatform,
-           when,
-         }: LogRecord) => {
+          id,
+          code,
+          httpmethod,
+          errormsg,
+          errortraceback,
+          errortype,
+          ip,
+          postvalues,
+          referrer,
+          requestargs,
+          requestpath,
+          useragent,
+          userbrowser,
+          userbrowserversion,
+          userplatform,
+          when,
+        }: LogRecord) => {
           const initialData: any[] = [
             id,
             code,
@@ -262,7 +264,7 @@ const elog = () => ({
         }
       );
       this.data = transformedData;
-      return {data: transformedData, total: recordsTotal};
+      return { data: transformedData, total: recordsFiltered };
     }
     throw Error('Data retrieving error');
   },
@@ -281,22 +283,22 @@ const elog = () => ({
             },
           },
         },
-        {name: 'Id', hidden: true},
-        {name: 'Code'},
-        {name: 'HTTP Method'},
-        {name: 'Error message', hidden: true},
-        {name: 'Error traceback', hidden: true},
-        {name: 'Error type'},
-        {name: 'Ip'},
-        {name: 'Post values'},
-        {name: 'Referrer'},
-        {name: 'Request args'},
-        {name: 'Request path'},
-        {name: 'User Agent'},
-        {name: 'User browser'},
-        {name: 'User browser version'},
-        {name: 'User platform'},
-        {name: 'When'},
+        { name: 'Id', hidden: true },
+        { name: 'Code' },
+        { name: 'HTTP Method' },
+        { name: 'Error message', hidden: true },
+        { name: 'Error traceback', hidden: true },
+        { name: 'Error type' },
+        { name: 'Ip' },
+        { name: 'Post values' },
+        { name: 'Referrer' },
+        { name: 'Request args' },
+        { name: 'Request path' },
+        { name: 'User Agent' },
+        { name: 'User browser' },
+        { name: 'User browser version' },
+        { name: 'User platform' },
+        { name: 'When' },
       ],
       // data: this.loadData.bind(this),
       server: {
@@ -318,7 +320,7 @@ const elog = () => ({
   getSelectedRowIds() {
     const checkboxPlugin = this.grid?.config.plugin.get('checkboxes');
     // Returned object is normally a proxy so we get the target
-    const {rowIds}: { rowIds: (string | number)[] } = JSON.parse(
+    const { rowIds }: { rowIds: (string | number)[] } = JSON.parse(
       JSON.stringify(checkboxPlugin?.props?.store.state)
     );
     return rowIds;
@@ -326,7 +328,7 @@ const elog = () => ({
   flushSelectionStore() {
     const checkboxPlugin = this.grid?.config.plugin.get('checkboxes');
     if (checkboxPlugin && checkboxPlugin.props)
-      checkboxPlugin.props.store.state.rowIds = []
+      checkboxPlugin.props.store.state.rowIds = [];
     // Returned object is normally a proxy so we get the target
     this.grid?.forceRender();
   },

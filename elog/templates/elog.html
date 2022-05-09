@@ -10,6 +10,7 @@
   <meta name="keywords" content="error,logs" />
   <meta name="csrf-token" content="{{ csrf_token() }}" />
   <meta http-equiv="Content-Language" content="en" />
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/elog.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
@@ -27,7 +28,7 @@
       {{ dropdown('Actions', {'Select all': {'action': 'checkAll', 'classes': ''}, 'Unselect all': {'action':
       'uncheckAll', 'classes': ''}, 'Toggle selection': {'action': 'toggleSelection', 'classes': ''}, 'Copy as CSV':
       {'action': 'copySelectionAsCSV', 'classes': ''}, 'Delete': {'action': 'deleteSelection', 'classes': 'bg-red-500
-      text-white hover:bg-red-600 ' }}) }}
+      text-gray-100 hover:bg-red-600 ' }}) }}
       {% include './includes/options.html' %}
 
     </section>

@@ -45,7 +45,7 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.assert_element('[x-data="elog"]')
 
     def trigger_error(self):
-        """This will trigger a 404 error to have at least one entry in the logs"""
+        """This will trigger a 404 error to have some entries in the logs"""
         requests.get(f"{self.get_server_url()}/favicon.ico")
 
     def test_records_shown(self):
@@ -97,8 +97,9 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         assert not checkboxes[0].is_selected()
         assert [c.is_selected() for c in checkboxes[1:]] == [True for _ in range(len(checkboxes) - 1)]
 
-    @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
+    # @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
     def test_copy_as_csv_action(self):
+
         self.goto(self.get_server_url())
         self.reload()
         checkbox = self.find_elements('input[type="checkbox"]')[0]
@@ -115,7 +116,7 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         # self.driver.execute_cdp('Browser.grantPermissions', origin=self.get_server_url(),
         #                                 permissions=['clipboardReadWrite'])
         clipboard_content = self.execute_async_script(
-            'let c = await navigator.clipboard.readText(); arguments[0](c)')
+            'navigator.clipboard.readText().then((c) => arguments[0](c))')
         print(clipboard_content)
         self.wait(5)
 
@@ -130,4 +131,15 @@ class TestCorePage(BaseCase, LiveServerTestCase):
             checkbox.click()
 
     def test_options(self):
-        ...
+        self.goto(self.get_server_url())
+        self.reload()
+        self.click('#options')
+        self.select_option_by_text('#length-option select', '40')
+        self.wait(2)  # To perform network call and refresh
+
+        assert len(self.find_elements('tr.gridjs-tr')) <= 41  # Header row included
+
+        self.select_option_by_text('#length-option select', '80')
+        self.wait(2)
+
+        assert len(self.find_elements('tr.gridjs-tr')) <= 81
