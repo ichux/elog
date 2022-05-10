@@ -275,6 +275,10 @@ const elog = () => ({
   init(): void {
     this.initCsrf();
     this.grid = new Grid({
+      sort: {
+        enabled: false,
+        multiColumn: true,
+      },
       columns: [
         {
           id: 'checkboxes',
@@ -288,20 +292,31 @@ const elog = () => ({
           },
         },
         { name: 'Id', hidden: true },
-        { name: 'Code' },
-        { name: 'HTTP Method' },
+        {
+          name: 'Code',
+          sort: {
+            enabled: true,
+            compare: (_a: any, _b: any) => {
+              const { val: a } = _a;
+              const { val: b } = _b;
+              // eslint-disable-next-line no-nested-ternary
+              return a > b ? 1 : a < b ? -1 : 0;
+            },
+          },
+        },
+        { name: 'HTTP Method', sort: { enabled: true } },
         { name: 'Error message', hidden: true },
         { name: 'Error traceback', hidden: true },
         { name: 'Error type' },
-        { name: 'Ip' },
+        { name: 'Ip', sort: { enabled: true } },
         { name: 'Post values' },
-        { name: 'Referrer' },
+        { name: 'Referrer', sort: { enabled: true } },
         { name: 'Request args' },
-        { name: 'Request path' },
-        { name: 'User Agent' },
-        { name: 'User browser' },
-        { name: 'User browser version' },
-        { name: 'User platform' },
+        { name: 'Request path', sort: { enabled: true } },
+        { name: 'User Agent', sort: { enabled: true } },
+        { name: 'User browser', sort: { enabled: true } },
+        { name: 'User browser version', sort: { enabled: true } },
+        { name: 'User platform', sort: { enabled: true } },
         { name: 'When' },
       ],
       // data: this.loadData.bind(this),

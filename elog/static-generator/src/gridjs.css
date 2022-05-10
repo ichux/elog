@@ -385,7 +385,7 @@ th.gridjs-th:last-child {
   min-width: 5rem !important;
 }
 
-.gridjs-td[data-column-id='postValues'], .gridjs-td[data-column-id='userAgent'] {
+.gridjs-td[data-column-id='postValues'], .gridjs-td[data-column-id='userAgent'], .gridjs-td[data-column-id='requestPath'] {
   max-width: 18rem !important;
 
   @apply truncate;
