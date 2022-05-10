@@ -17,6 +17,10 @@ const elog = () => ({
   showRecordDetailsView: false,
   currentSelection: [] as [string, any][],
   currentSelectionId: '',
+  copyState: Array.from(Array(16).keys()).map((_) => ({
+    copied: false,
+    status: false,
+  })),
   checkAll() {
     document
       .querySelectorAll('input.gridjs-checkbox')
@@ -149,6 +153,8 @@ const elog = () => ({
     }
   },
   showDetails(...args: any[]): void {
+    console.log('rowClick');
+    console.log(args);
     const { currentTarget } = args[0];
     let data = decodeURIComponent(
       currentTarget
@@ -182,6 +188,7 @@ const elog = () => ({
     this.showRecordDetailsView = true;
   },
   onGridReady() {
+    console.log('ready');
     this.innerModalHeight =
       document
         .querySelector('.gridjs.gridjs-container')

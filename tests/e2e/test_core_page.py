@@ -97,7 +97,7 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         assert not checkboxes[0].is_selected()
         assert [c.is_selected() for c in checkboxes[1:]] == [True for _ in range(len(checkboxes) - 1)]
 
-    # @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
+    @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
     def test_copy_as_csv_action(self):
 
         self.goto(self.get_server_url())
@@ -143,3 +143,12 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.wait(2)
 
         assert len(self.find_elements('tr.gridjs-tr')) <= 81
+
+    def test_search(self):
+        rand_path = token_hex(12)
+        requests.get(f"{self.get_server_url()}/{rand_path}")
+        self.goto(self.get_server_url())
+        self.reload()
+        self.input('input', f"code:404 AND referrer:None AND requestpath:{rand_path}")
+        self.submit('form')
+        self.find_text(rand_path)
