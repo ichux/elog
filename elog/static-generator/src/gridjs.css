@@ -381,6 +381,16 @@ th.gridjs-th:last-child {
   /* border-right: 1px solid #909090; */
 }
 
+.gridjs-th[data-column-id='code'] {
+  min-width: 5rem !important;
+}
+
+.gridjs-td[data-column-id='postValues'], .gridjs-td[data-column-id='userAgent'] {
+  max-width: 18rem !important;
+
+  @apply truncate;
+}
+
 tbody .gridjs-tr {
   cursor: pointer;
 }
