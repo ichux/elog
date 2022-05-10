@@ -17,6 +17,10 @@ const elog = () => ({
   showRecordDetailsView: false,
   currentSelection: [] as [string, any][],
   currentSelectionId: '',
+  copyState: Array.from(Array(16).keys()).map(() => ({
+    copied: false,
+    status: false,
+  })),
   checkAll() {
     document
       .querySelectorAll('input.gridjs-checkbox')
