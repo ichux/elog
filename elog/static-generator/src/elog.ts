@@ -6,6 +6,25 @@ import { LogRecord, LogRecordTuple } from './types';
 import Notification from './alert';
 import './gridjs.css';
 
+const fields = [
+  'Id',
+  'Code',
+  'HTTP Method',
+  'Error message',
+  'Error traceback',
+  'Error type',
+  'Ip',
+  'Post values',
+  'Referrer',
+  'Request args',
+  'Request path',
+  'User Agent',
+  'User browser',
+  'User browser version',
+  'User platform',
+  'When',
+];
+
 const elog = () => ({
   options: { contentLength: 20 },
   data: [] as Array<LogRecordTuple>,
@@ -87,44 +106,38 @@ const elog = () => ({
   },
   async copySelectionAsCSV() {
     try {
-      const fields = [
-        'Id',
-        'Code',
-        'HTTP Method',
-        'Error message',
-        'Error traceback',
-        'Error type',
-        'Ip',
-        'Post values',
-        'Referrer',
-        'Request args',
-        'Request path',
-        'User Agent',
-        'User browser',
-        'User browser version',
-        'User platform',
-        'When',
-      ];
-      const rowIds = this.getSelectedRowIds();
-
-      if (rowIds.length === 0) {
+      const { csv, total } = this.getCSVStr();
+      if (total === 0) {
         Notification.warn.fire({ text: 'Nothing to copy' });
         return;
       }
 
-      const records = this.data.filter((record: LogRecordTuple) =>
-        rowIds.includes(record[0])
-      );
-      const extracted = records.map(this.extractData);
-      const csv = parse(extracted, { fields, eol: '\n' });
       await navigator.clipboard.writeText(csv);
-      const total = extracted.length;
+
       Notification.success.fire({
         text: `${total} record${total > 1 ? 's' : ''} copied`,
       });
     } catch (e) {
       Notification.alert.fire({ text: 'An error occured :(' });
     }
+  },
+  async downloadSelectionAsCSV() {
+    const { csv, total } = this.getCSVStr();
+    if (total === 0) {
+      Notification.warn.fire({ text: 'Nothing selected' });
+      return;
+    }
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+
+    const a = document.createElement('a');
+    a.href = window.URL.createObjectURL(blob);
+    a.download = `elog-records-${Date.now()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(a.href);
   },
   async deleteSelection() {
     const rowIds = this.getSelectedRowIds();
@@ -276,6 +289,7 @@ const elog = () => ({
     this.initCsrf();
     this.grid = new Grid({
       sort: {
+        // @ts-ignore
         enabled: false,
         multiColumn: true,
       },
@@ -343,6 +357,22 @@ const elog = () => ({
       JSON.stringify(checkboxPlugin?.props?.store.state)
     );
     return rowIds;
+  },
+  getCSVStr(): { csv: string; total: number } {
+    const rowIds = this.getSelectedRowIds();
+
+    if (rowIds.length === 0) {
+      return { csv: '', total: 0 };
+    }
+
+    const records = this.data.filter((record: LogRecordTuple) =>
+      rowIds.includes(record[0])
+    );
+    const extracted = records.map(this.extractData);
+    const csv = parse(extracted, { fields, eol: '\n' });
+    const total = extracted.length;
+
+    return { total, csv };
   },
   flushSelectionStore() {
     const checkboxPlugin = this.grid?.config.plugin.get('checkboxes');
