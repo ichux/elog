@@ -38,12 +38,13 @@
     @apply px-2 py-1.5 border border-gray-300 focus:border-gray-500 focus:outline-none;
   }
 
-  pre, code {
+  pre,
+  code {
     @apply inline-block max-w-full overflow-auto;
   }
 
   #record_details {
-    box-shadow: 0 1px 3px #0000001a,0 1px 2px #00000042;
+    box-shadow: 0 1px 3px #0000001a, 0 1px 2px #00000042;
   }
 }
 

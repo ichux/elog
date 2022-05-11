@@ -18,3 +18,4 @@ docs/
 libraries/
 .venv/
 **/*.sqlite3
+**/.pnpm-debug.log

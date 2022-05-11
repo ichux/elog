@@ -1,7 +1,7 @@
-import Alpine from "alpinejs";
+import Alpine from 'alpinejs';
 
 Alpine.data('auth', () => ({
   tab: 'login',
 }));
 
-document.addEventListener("DOMContentLoaded", Alpine.start);
+document.addEventListener('DOMContentLoaded', Alpine.start);
