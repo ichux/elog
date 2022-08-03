@@ -1,19 +1,20 @@
 from secrets import token_hex
+
+from dotenv import load_dotenv
 from flask_testing import LiveServerTestCase  # type: ignore
 from seleniumbase import BaseCase  # type: ignore
-from dotenv import load_dotenv
 
 load_dotenv()
 
-from elog import elap, db, User  # noqa: E402
+from elog import User, db, elap  # noqa: E402
 
 
 class TestAuthPage(BaseCase, LiveServerTestCase):
     def create_app(self):
-        elap.config['TESTING'] = True
-        elap.config['SECRET_KEY'] = token_hex(12)
-        elap.config['LIVESERVER_PORT'] = 9000
-        elap.config['LIVESERVER_TIMEOUT'] = 10
+        elap.config["TESTING"] = True
+        elap.config["SECRET_KEY"] = token_hex(12)
+        elap.config["LIVESERVER_PORT"] = 9000
+        elap.config["LIVESERVER_TIMEOUT"] = 10
         return elap
 
     def setUp(self, masterqa_mode=False):
@@ -38,7 +39,7 @@ class TestAuthPage(BaseCase, LiveServerTestCase):
         self.goto(f"{self.get_server_url()}/auth")
         self.input('input[placeholder="Username"]', self.username)
         self.input('input[placeholder="Password"]', self.pwd)
-        self.submit('form')
+        self.submit("form")
 
         self.assert_element('[x-data="elog"]')
 
@@ -46,9 +47,9 @@ class TestAuthPage(BaseCase, LiveServerTestCase):
         self.goto(f"{self.get_server_url()}/auth")
         self.input('input[placeholder="Username"]', self.username)
         self.input('input[placeholder="Password"]', self.pwd)
-        self.submit('form')
+        self.submit("form")
 
-        self.click('div#logout-dropdown')
-        self.click('div#logout-dropdown a')
+        self.click("div#logout-dropdown")
+        self.click("div#logout-dropdown a")
 
         self.assertIn(f"{self.get_server_url()}/auth", self.get_current_url())

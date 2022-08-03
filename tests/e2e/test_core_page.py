@@ -9,15 +9,15 @@ from seleniumbase import BaseCase  # type: ignore
 
 load_dotenv()
 
-from elog import elap, db, User  # noqa: E402
+from elog import User, db, elap  # noqa: E402
 
 
 class TestCorePage(BaseCase, LiveServerTestCase):
     def create_app(self):
-        elap.config['TESTING'] = True
-        elap.config['SECRET_KEY'] = token_hex(12)
-        elap.config['LIVESERVER_PORT'] = 9000
-        elap.config['LIVESERVER_TIMEOUT'] = 10
+        elap.config["TESTING"] = True
+        elap.config["SECRET_KEY"] = token_hex(12)
+        elap.config["LIVESERVER_PORT"] = 9000
+        elap.config["LIVESERVER_TIMEOUT"] = 10
         return elap
 
     def setUp(self, masterqa_mode=False):
@@ -40,7 +40,7 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.goto(f"{self.get_server_url()}/auth")
         self.input('input[placeholder="Username"]', self.username)
         self.input('input[placeholder="Password"]', self.pwd)
-        self.submit('form')
+        self.submit("form")
 
         self.assert_element('[x-data="elog"]')
 
@@ -51,36 +51,45 @@ class TestCorePage(BaseCase, LiveServerTestCase):
     def test_records_shown(self):
         self.goto(self.get_server_url())
         self.reload()
-        self.assert_elements('table', 'tr.gridjs-tr', 'td.gridjs-td')
+        self.assert_elements("table", "tr.gridjs-tr", "td.gridjs-td")
 
     def test_record_details(self):
         self.goto(self.get_server_url())
         self.reload()
-        columns = self.find_elements('td')
-        columns[3].click()  # 14 fields per row with checkboxes first so the choice has to take them into account
-        records = [r.text for r in self.find_elements('.info-box__content')]
+        columns = self.find_elements("td")
+        columns[
+            3
+        ].click()  # 14 fields per row with checkboxes first so the choice has to take them into account
+        records = [r.text for r in self.find_elements(".info-box__content")]
         columns[17].click()
-        records2 = [r.text for r in self.find_elements('.info-box__content')]
+        records2 = [r.text for r in self.find_elements(".info-box__content")]
 
-        self.assert_elements('aside#record_details', 'aside#record_details .info-box',
-                             'aside#record_details .info-box pre code')
+        self.assert_elements(
+            "aside#record_details",
+            "aside#record_details .info-box",
+            "aside#record_details .info-box pre code",
+        )
         assert records != records2
 
     def test_action_select_all(self):
         self.goto(self.get_server_url())
         self.reload()
-        self.assert_element('#actions .dropdown button')
-        self.click('#actions .dropdown button')
-        self.click('#select-all')
+        self.assert_element("#actions .dropdown button")
+        self.click("#actions .dropdown button")
+        self.click("#select-all")
         checkboxes = self.find_elements('input[type="checkbox"]')
-        assert [c.is_selected() for c in checkboxes] == [True for _ in range(len(checkboxes))]
+        assert [c.is_selected() for c in checkboxes] == [
+            True for _ in range(len(checkboxes))
+        ]
 
     def test_action_unselect_all(self):
         self.test_action_select_all()  # Because we need to check elements before
-        self.click('#actions .dropdown button')
-        self.click('#unselect-all')
+        self.click("#actions .dropdown button")
+        self.click("#unselect-all")
         checkboxes = self.find_elements('input[type="checkbox"]')
-        assert [c.is_selected() for c in checkboxes] == [False for _ in range(len(checkboxes))]
+        assert [c.is_selected() for c in checkboxes] == [
+            False for _ in range(len(checkboxes))
+        ]
 
     def test_toggle_action(self):
         self.goto(self.get_server_url())
@@ -89,13 +98,17 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         checkboxes[0].click()
 
         assert checkboxes[0].is_selected()
-        assert [c.is_selected() for c in checkboxes[1:]] == [False for _ in range(len(checkboxes) - 1)]
+        assert [c.is_selected() for c in checkboxes[1:]] == [
+            False for _ in range(len(checkboxes) - 1)
+        ]
 
-        self.click('#actions .dropdown button')
-        self.click('#toggle-selection')
+        self.click("#actions .dropdown button")
+        self.click("#toggle-selection")
 
         assert not checkboxes[0].is_selected()
-        assert [c.is_selected() for c in checkboxes[1:]] == [True for _ in range(len(checkboxes) - 1)]
+        assert [c.is_selected() for c in checkboxes[1:]] == [
+            True for _ in range(len(checkboxes) - 1)
+        ]
 
     @pytest.mark.skip(reason="Have to deal with permission issues in navigator")
     def test_copy_as_csv_action(self):
@@ -104,9 +117,9 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.reload()
         checkbox = self.find_elements('input[type="checkbox"]')[0]
         checkbox.click()
-        self.click('#actions .dropdown button')
-        self.click('#copy-as-csv')
-        self.assert_element('.success-popup')
+        self.click("#actions .dropdown button")
+        self.click("#copy-as-csv")
+        self.assert_element(".success-popup")
 
         # This attempt to access the nav clipboard from Javascript
         # to here. It's async and as there no args, arguments[0] represents
@@ -116,7 +129,8 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         # self.driver.execute_cdp('Browser.grantPermissions', origin=self.get_server_url(),
         #                                 permissions=['clipboardReadWrite'])
         clipboard_content = self.execute_async_script(
-            'navigator.clipboard.readText().then((c) => arguments[0](c))')
+            "navigator.clipboard.readText().then((c) => arguments[0](c))"
+        )
         print(clipboard_content)
         self.wait(5)
 
@@ -125,30 +139,30 @@ class TestCorePage(BaseCase, LiveServerTestCase):
         self.reload()
         checkbox = self.find_element('input[type="checkbox"]')
         checkbox.click()
-        self.click('#actions .dropdown button')
-        self.click('#delete')
+        self.click("#actions .dropdown button")
+        self.click("#delete")
         with pytest.raises(StaleElementReferenceException):
             checkbox.click()
 
     def test_options(self):
         self.goto(self.get_server_url())
         self.reload()
-        self.click('#options')
-        self.select_option_by_text('#length-option select', '40')
+        self.click("#options")
+        self.select_option_by_text("#length-option select", "40")
         self.wait(2)  # To perform network call and refresh
 
-        assert len(self.find_elements('tr.gridjs-tr')) <= 41  # Header row included
+        assert len(self.find_elements("tr.gridjs-tr")) <= 41  # Header row included
 
-        self.select_option_by_text('#length-option select', '80')
+        self.select_option_by_text("#length-option select", "80")
         self.wait(2)
 
-        assert len(self.find_elements('tr.gridjs-tr')) <= 81
+        assert len(self.find_elements("tr.gridjs-tr")) <= 81
 
     def test_search(self):
         rand_path = token_hex(12)
         requests.get(f"{self.get_server_url()}/{rand_path}")
         self.goto(self.get_server_url())
         self.reload()
-        self.input('input', f"code:404 AND referrer:None AND requestpath:{rand_path}")
-        self.submit('form')
+        self.input("input", f"code:404 AND referrer:None AND requestpath:{rand_path}")
+        self.submit("form")
         self.find_text(rand_path)

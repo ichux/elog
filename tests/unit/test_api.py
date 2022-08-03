@@ -140,7 +140,7 @@ class RESTRoutes(unittest.TestCase):
                 self.assertTrue(_.enabled)
                 break
 
-    @unittest.skip(u"essential skip")
+    @unittest.skip("essential skip")
     def test_elog_api(self):
         """
         Sends data to the API route
