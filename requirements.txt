@@ -31,6 +31,6 @@ SQLAlchemy==1.4.36
 ua-parser==0.10.0
 uwsgitop==0.11
 WebTest==3.0.0
-Werkzeug==2.1.2
+Werkzeug==2.2.3
 Whoosh==2.7.4
 WTForms==3.0.1
